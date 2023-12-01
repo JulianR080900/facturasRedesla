@@ -1,0 +1,242 @@
+:root{
+  --Relayn: #f39831;
+  --Relep: #06a51b;
+  --Relen: #bf252b;
+  --Releem: #80287e;
+  --Releg: #e95296;
+  --blue-color: #fff;
+}
+
+body{
+    background: linear-gradient(to right, #434343 0%, black 100%) !important;
+}
+
+.bg-Relayn {
+  background: var(--Relayn) !important;
+  color: var(--blue-color) !important;
+}
+.bg-Relep {
+  background: var(--Relep) !important;
+  color: var(--blue-color) !important;
+}
+.bg-Relen {
+  background: var(--Relen) !important;
+  color: var(--blue-color) !important;
+}
+.bg-Releem {
+  background: var(--Releem) !important;
+  color: var(--blue-color) !important;
+}
+.bg-Releg {
+  background: var(--Releg) !important;
+  color: var(--blue-color) !important;
+}
+
+.content {
+  margin: 3rem;
+  height: auto;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.justifyCenterColumn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  height: 90vh;
+}
+
+.userInfo {
+  padding: 1rem;
+}
+
+#btnGo {
+  width: 90%;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  color: white;
+    background: linear-gradient(to right, #434343 0%, black 100%);
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .justifyCenterColumn {
+    height: auto;
+  }
+
+  .userInfo {
+    margin-top: 1rem;
+  }
+
+  .miembros {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .bienvenido {
+    font-size: 2rem !important;
+  }
+
+  .seleccionar {
+    font-size: 2rem !important;
+  }
+  .option .option-text {
+    font-size: 11px !important;
+  }
+}
+
+.justifyCenter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 90vh;
+}
+
+.profile_pic {
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  border: 2px solid #000;
+}
+
+.bienvenido {
+  font-weight: 700;
+  font-size: 3rem;
+}
+
+.seleccionar {
+  font-weight: 700;
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.username {
+  font-size: 1.3rem;
+}
+
+.txt {
+  color: #000;
+  font-size: 1rem;
+  text-align: center;
+  font-weight: 500;
+}
+
+.divImage {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.divImage img {
+  width: 40%;
+}
+
+.iconlogout {
+  rotate: 180deg;
+}
+
+.logout {
+  margin-top: 1rem;
+}
+
+.select-menu {
+  width: 90%;
+  /* margin: 140px auto; */
+}
+
+.select-menu .select-btn {
+  display: flex;
+  height: 55px;
+  background: #fff;
+  padding: 20px;
+  font-size: 18px;
+  font-weight: 400;
+  border-radius: 8px;
+  align-items: center;
+  cursor: pointer;
+  justify-content: space-between;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 1);
+}
+
+.select-btn i {
+  font-size: 25px;
+  transition: 0.3s;
+}
+
+.select-menu.active .select-btn i {
+  transform: rotate(-180deg);
+}
+
+.select-menu .options {
+  position: relative;
+  padding: 20px;
+  margin-top: 10px;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
+  display: none;
+  height: 12rem;
+}
+
+.select-menu.active .options {
+  display: block;
+  overflow-y: scroll;
+}
+
+.options .option {
+  display: flex;
+  height: 55px;
+  cursor: pointer;
+  padding: 0 16px;
+  border-radius: 8px;
+  align-items: center;
+  background: #fff;
+}
+
+.options .option:hover {
+  background: #f2f2f2;
+}
+
+.option img {
+  width: 25px;
+  margin-right: 12px;
+}
+
+.option .option-text {
+  font-size: 18px;
+  color: #333;
+}
+
+.miembros {
+  display: inline-flex;
+}
+
+.miembros img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+.miembros .miembro {
+  margin: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  align-content: center;
+}
+.fa-crown {
+  color: gold;
+}
+
+#titleMiembros {
+  margin-top: 1rem;
+  display: none;
+}
+
+.fa-sort-up {
+  rotate: 90deg;
+}

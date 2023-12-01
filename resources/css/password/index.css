@@ -1,0 +1,76 @@
+@font-face {
+	font-family: "avenir";
+	src: url(../../fonts/Avenir_Medium/Avenir\ Medium.ttf);
+}
+
+:root {
+	--font-family-color: #000;
+	--btnPrimary: #44535e;
+}
+
+* {
+	font-family: "avenir";
+}
+
+body {
+	background-image: url("../../img/backgrounds/password.png");
+}
+
+.container {
+	padding: 2rem;
+
+	color: var(--font-family-color);
+}
+
+.btnPrimary {
+	background-color: var(--btnPrimary);
+	color: #fff;
+}
+
+#row_imagenes {
+	display: block;
+
+	margin-top: 3%;
+
+	margin-bottom: 3%;
+}
+
+img {
+	margin-left: 3%;
+}
+
+h1 {
+	text-align: center;
+
+	color: black;
+}
+
+.col-md-12 {
+	margin-top: 2em;
+}
+
+section {
+	padding: 50px;
+
+	max-width: 900px;
+
+	margin: 30px auto;
+
+	background: white;
+
+	background: white;
+
+	backdrop-filter: blur(10px);
+
+	box-shadow: 0px 15px 10px rgba(0, 0, 0, 0.3);
+
+	border-radius: 20px;
+
+	transition: transform 0.2s ease-in-out;
+}
+
+@media (max-width: 640px) {
+	body {
+		margin: 10px;
+	}
+}

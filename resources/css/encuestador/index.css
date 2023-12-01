@@ -1,0 +1,106 @@
+@font-face {
+	font-family: 'avenir';
+	src: url(../../fonts/Avenir_Medium/Avenir\ Medium.ttf);
+}
+
+:root{
+    --font-primary-color: #000;
+    --btnPrimary: #44535E;
+    --Relayn: #f39831;
+	--Relep: #06a51b;
+	--Relen: #bf252b;
+	--Releem: #80287e;
+	--Relmo: #e95296;
+	--Redesla: #676665;
+}
+
+*{
+    font-family: 'avenir';
+}
+
+#row_imagenes {
+	display: block;
+
+	margin-top: 3%;
+
+	margin-bottom: 3%;
+}
+
+img {
+	margin-left: 3%;
+}
+
+body {
+	background-image: url("../../img/backgrounds/encuestador.png");
+}
+
+section {
+	padding: 50px;
+
+	max-width: 900px;
+
+	margin: 30px auto;
+
+	background: white;
+
+	background: white;
+
+	backdrop-filter: blur(10px);
+
+	box-shadow: 0px 15px 10px rgba(0, 0, 0, 0.3);
+
+	border-radius: 20px;
+
+	transition: transform 0.2s ease-in-out;
+}
+
+label{
+    color: var(--font-primary-color);
+}
+
+.btnPrimary{
+    background-color: var(--btnPrimary);
+    color: #fff;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.Relayn{
+    background-color: var(--Relayn);
+    color: #fff;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.Relen{
+    background-color: var(--Relen);
+    color: #fff;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.Relep{
+    background-color: var(--Relep);
+    color: #fff;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.Releem{
+    background-color: var(--Releem);
+    color: #fff;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.Relmo{
+    background-color: var(--Relmo);
+    color: #fff;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.regresar{
+    background-color: #44535E;
+    color: #fff;
+}

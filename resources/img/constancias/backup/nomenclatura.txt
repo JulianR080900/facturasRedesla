@@ -1,0 +1,7 @@
+Todo es en base a la base de datos
+
+primero va el nombre de la constancia
+luego el nombre de la red
+por ultimo el año
+
+ojo, que el tipo de imagen siempre sea el mismo

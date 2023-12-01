@@ -1,0 +1,206 @@
+.content-file{
+    /* max-width: 400px; */
+    width: 100%;
+    /* background: #fff; */
+    padding: 30px;
+    border-radius: 30px;
+    border: 2px dashed #fff;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.img-area{
+    position: relative;
+    width: 100%;
+    height: 240px;
+    background: #808080;
+    margin-bottom: 30px;
+    border-radius: 15px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    flex-direction: column;
+}
+
+.img-area .icon{
+    font-size: 100px;
+    rotate: 180deg;
+    color: #fff;
+}
+
+.img-area h3{
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 6px;
+    color: #fff;
+}
+.img-area img{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    z-index: 100;
+}
+
+.img-area::before{
+    content: attr(data-img);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, .5);
+    color: #fff;
+    font-weight: 500;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+    opacity: 0;
+    transition: all .3s ease;
+    z-index: 200;
+}
+.img-area.active:hover::before{
+    opacity: 1;
+}
+
+.img-area p{
+    color: #fff;
+    text-align: center;
+}
+.img-area p span{
+    font-weight: 600;
+}
+.select-image{
+    display: block;
+    width: 100%;
+    padding:  16px 0;
+    border-radius: 15px;
+    background: #56008c;
+    color: #fff;
+    font-weight: 500;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    transition: all .3s ease;
+}
+
+.select-image:hover{
+    background-color: #7900ac;
+}
+.profile_icon{
+    width: 30px;
+    height: 30px;
+    border-radius: 100%;
+}
+
+.paddingOrdenAutores{
+    padding-top: 2rem;
+}
+
+.card-body.card-body-congresos .fase_5 span{
+    color: #000 !important;
+}
+
+.card-body.card-body-congresos .fase_3 span{
+    color: #000 !important;
+}
+
+.keyWords button,
+.keyWords input{
+    margin: 0.5rem 0rem 0.5rem 0rem;
+}
+
+/* Suggestions items */
+.tagify__dropdown.users-list .tagify__dropdown__item{
+    padding: .5em .7em;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0 1em;
+    grid-template-areas: "avatar name"
+                        "avatar email";
+}
+
+.tagify__dropdown.users-list .tagify__dropdown__item:hover .tagify__dropdown__item__avatar-wrap{
+    transform: scale(1.2);
+}
+
+.tagify__dropdown.users-list .tagify__dropdown__item__avatar-wrap{
+    grid-area: avatar;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #EEE;
+    transition: .1s ease-out;
+}
+
+.tagify__dropdown.users-list img{
+    width: 100%;
+    vertical-align: top;
+}
+
+.tagify__dropdown.users-list strong{
+    grid-area: name;
+    width: 100%;
+    align-self: center;
+}
+
+.tagify__dropdown.users-list span{
+    grid-area: email;
+    width: 100%;
+    font-size: .9em;
+    opacity: .6;
+}
+
+.tagify__dropdown.users-list .tagify__dropdown__item__addAll{
+    border-bottom: 1px solid #DDD;
+    gap: 0;
+}
+
+
+/* Tags items */
+.tagify__tag{
+    white-space: nowrap;
+}
+
+.tagify__tag:hover .tagify__tag__avatar-wrap{
+    transform: scale(1.6) translateX(-10%);
+}
+
+.tagify__tag .tagify__tag__avatar-wrap{
+    width: 16px;
+    height: 16px;
+    white-space: normal;
+    border-radius: 50%;
+    background: silver;
+    margin-right: 5px;
+    transition: .12s ease-out;
+}
+
+.tagify__tag img{
+    width: 100%;
+    vertical-align: top;
+    pointer-events: none;
+}
+
+.marginTopBottom{
+    margin-bottom: 1rem;
+    margin-bottom: 1rem;
+}
+
+.tableArchivos thead th{
+    cursor: default;
+}
+
+.sorting_1{
+    background-color: transparent !important;
+}
+
+.clipboard{
+    border: 1px solid var(--blue-color);
+}

@@ -1,0 +1,432 @@
+@font-face {
+	font-family: 'avenir';
+	src: url(../../fonts/Avenir_Font/AvenirLTStd-Roman.otf);
+}
+
+
+:root {
+
+    --font_primary_color: #000;
+    --main-sexo-color: #189b4f;
+    --btn-miembros: #189b4f;
+
+}
+
+
+
+* {
+
+    font-family: 'avenir';
+
+}
+
+
+
+body {
+
+    background: url("./../../img/backgrounds/registros/Relep.png");
+
+    color: var(--font_primary_color);
+
+    padding: 2rem;
+
+}
+
+.btn-miembros{
+    background-color: var(--btn-miembros);
+    color: #fff;
+}
+
+
+
+section {
+
+    padding: 50px;
+
+    max-width: 900px;
+
+    margin: 30px auto;
+
+    background: white;
+
+    background: white;
+
+    backdrop-filter: blur(10px);
+
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.3);
+
+    border-radius: 5px;
+
+    transition: transform 0.2s ease-in-out;
+
+}
+
+
+
+.form__answer {
+
+    display: inline-block;
+
+    box-sizing: border-box;
+
+    width: 23%;
+
+    margin: 20px 1% 20px 0;
+
+    vertical-align: top;
+
+    font-size: 22px;
+
+    text-align: center;
+
+    color: rgb(255, 255, 255)
+
+}
+
+
+
+input[name=c_miembros] {
+
+    opacity: 0;
+
+    width: 0;
+
+    height: 0;
+
+}
+
+
+
+#cantidad_miembros label {
+
+    border: 2px solid;
+
+    border-color: rgba(0, 0, 0, 0.3);
+
+    box-sizing: border-box;
+
+    display: block;
+
+    width: 100%;
+
+    padding: 10px 10px 30px 10px;
+
+    cursor: pointer;
+
+    opacity: .5;
+
+    transition: all .5s ease-in-out;
+
+    color: #000;
+
+}
+
+
+
+#cantidad_miembros label:hover,
+
+#cantidad_miembros label:focus,
+
+#cantidad_miembros label:active {
+
+    border: 2px solid #189b4f;
+
+}
+
+
+
+input[name="c_miembros"]:active {
+
+    opacity: 1;
+
+}
+
+
+
+input[name="c_miembros"]:checked {
+
+    border: 2px solid #189b4f;
+
+}
+
+
+
+input[type=number]::-webkit-inner-spin-button,
+
+input[type=number]::-webkit-outer-spin-button {
+
+    -webkit-appearance: none;
+
+    margin: 0;
+
+}
+
+
+
+.col-md-9 {
+
+    padding-left: 25px;
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*=========================================================*/
+
+.yc-form {
+
+  display: flex;
+
+}
+
+
+
+.yc-form input {
+
+  position: absolute !important;
+
+  clip: rect(0, 0, 0, 0);
+
+  height: 1px;
+
+  width: 1px;
+
+}
+
+
+
+.yc-form label {
+
+  font-size: 1em;
+
+  text-align: center;
+
+  padding: .2em 1.1em;/*tamaño original 0.5em 2em;*/
+
+  border: 1px solid black;
+
+}
+
+
+
+.yc-form label:hover {
+
+  cursor: pointer;
+
+}
+
+
+
+.yc-form input#hombre1:checked+label {
+
+  background-color: #189b4f;
+
+  color: white;
+
+}
+
+
+
+.yc-form input#mujer1:checked+label {
+
+  background-color: #189b4f;
+
+  color: white;
+
+}
+
+
+
+.yc-form input#hombre2:checked+label {
+
+  background-color: #189b4f;
+
+  color: white;
+
+}
+
+
+
+.yc-form input#mujer2:checked+label {
+
+  background-color: #189b4f;
+
+  color: white;
+
+}
+
+
+
+.yc-form input#hombre3:checked+label {
+
+  background-color: #189b4f;
+
+  color: white;
+
+}
+
+
+
+.yc-form input#mujer3:checked+label {
+
+  background-color: #189b4f;
+
+  color: white;
+
+}
+
+
+
+.yc-form input#hombre4:checked+label {
+
+  background-color: #189b4f;
+
+  color: white;
+
+}
+
+
+
+.yc-form input#mujer4:checked+label {
+
+  background-color: #189b4f;
+
+  color: white;
+
+}
+
+
+
+.yc-form label:first-of-type {
+
+  border-radius: 25px 0 0 25px;
+
+}
+
+
+
+.yc-form label:last-of-type {
+
+  border-radius: 0 25px 25px 0;
+
+}
+
+
+
+.sexo{
+
+    
+
+}
+
+/*===========================================================*/
+
+
+
+.avoid-clicks {
+
+  pointer-events: none;
+
+  background-color: #e9ecef; /*NO CAMBIAR*/
+
+}
+
+
+
+.avoid-clicks-radio {
+
+  pointer-events: none;
+
+}
+
+
+
+@media screen and (min-width: 784px){
+  .cantidad_mobile{
+      display: none;
+  }
+}
+
+
+
+@media screen and (max-width: 784px){
+
+.yc-form{
+
+  display: block;
+
+}
+
+.cantidad_desktop{
+  display:none;
+}
+
+.cantidad_mobile{
+  display: block;
+  color: #000;
+}
+
+.form__answer{
+  display: block;
+  width: 100%;
+}
+
+}
+
+.loader {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  display: inline-block;
+  border-top: 4px solid var(--btn-miembros);
+  border-right: 4px solid transparent;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+.loader::after {
+  content: "";
+  box-sizing: border-box;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  border-bottom: 4px solid #fff;
+  border-left: 4px solid transparent;
+}
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+#loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* Fondo semitransparente */
+  z-index: 9999; /* Z-index alto para asegurarse de que esté por encima de otros elementos */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  color: #fff;
+  font-size: xx-large;
+  font-weight: 600;
+}

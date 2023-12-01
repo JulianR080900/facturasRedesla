@@ -1,0 +1,391 @@
+@font-face {
+	font-family: "avenir";
+	src: url(../../../../fonts/Avenir_Medium/Avenir\ Medium.ttf);
+}
+
+:root{
+    --font-primary-color: #000;
+    --btnPrimary: #44535E;
+    --btnSecundary: #798F8C;
+}
+
+*{
+    font-family: 'avenir';
+}
+
+body{
+    background: url('../../../../img/backgrounds/registros/Relayn.png');
+}
+
+.next{
+    color: #fff;
+    background-color: #E65300;
+}
+
+section {
+    max-width: none !important;
+}
+
+/*Color number of the step and the connector before it*/
+#progressbar li.active:before,
+#progressbar li.active:after {
+    color: #FF6C0E;
+}
+
+.container{
+    padding: 1rem;
+	color: var(--font-primary-color);
+}
+
+#row_imagenes {
+	display: block;
+	margin-top: 3%;
+	margin-bottom: 3%;
+}
+
+img {
+	margin-left: 3%;
+}
+
+#btnVerificar{
+    background-color: var(--btnPrimary);
+    color: #fff;
+}
+
+i{
+    color: #fff;
+}
+
+.col-md-12 {
+	margin-top: 2em;
+}
+
+section {
+	padding: 50px;
+
+	max-width: 1100px;
+
+	margin: 30px auto;
+
+	background: white;
+
+	background: white;
+
+	backdrop-filter: blur(10px);
+
+	box-shadow: 0px 15px 10px rgba(0, 0, 0, 0.3);
+
+	border-radius: 20px;
+
+	transition: transform 0.2s ease-in-out;
+}
+
+button{
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+label{
+    font-size: 20px;
+}
+
+@media (max-width: 640px) {
+	body {
+		margin: 10px;
+	}
+
+    #row_imagenes img{
+        width: 100%;
+    }
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+#grad1 {
+    background-color: #9C27B0;
+    background-image: linear-gradient(120deg, #FF4081, #81D4FA);
+}
+
+/*form styles*/
+#msform {
+    position: relative;
+    margin-top: 20px;
+}
+
+label {
+    font-size: 16px !important;
+}
+
+
+#msform fieldset {
+    border: 0 none;
+    border-radius: 0.5rem;
+    box-sizing: border-box;
+    width: 100%;
+    margin: 0;
+    padding-bottom: 20px;
+    position: relative;
+}
+
+/*Hide all except first fieldset*/
+#msform fieldset:not(:first-of-type) {
+    display: none;
+}
+
+#msform fieldset .form-card {
+    text-align: left;
+    color: #9E9E9E;
+}
+
+/*Blue Buttons*/
+#msform .action-button {
+    width: 100px;
+    background: skyblue;
+    font-weight: bold;
+    color: white;
+    border: 0 none;
+    border-radius: 0px;
+    cursor: pointer;
+    padding: 10px 5px;
+    margin: 10px 5px;
+}
+
+#msform .action-button:hover,
+#msform .action-button:focus {
+    box-shadow: 0 0 0 2px white, 0 0 0 3px skyblue;
+}
+
+/*Previous Buttons*/
+#msform .action-button-previous {
+    width: 100px;
+    background: #616161;
+    font-weight: bold;
+    color: white;
+    border: 0 none;
+    border-radius: 0px;
+    cursor: pointer;
+    padding: 10px 5px;
+    margin: 10px 5px;
+}
+
+#msform .action-button-previous:hover,
+#msform .action-button-previous:focus {
+    box-shadow: 0 0 0 2px white, 0 0 0 3px #616161;
+}
+
+/*Dropdown List Exp Date*/
+select.list-dt {
+    border: none;
+    outline: 0;
+    border-bottom: 1px solid #ccc;
+    padding: 2px 5px 3px 5px;
+    margin: 2px;
+}
+
+select.list-dt:focus {
+    border-bottom: 2px solid skyblue;
+}
+
+/*The background card*/
+.card {
+    z-index: 0;
+    border: none;
+    border-radius: 0.5rem;
+    position: relative;
+}
+
+/*FieldSet headings*/
+.fs-title {
+    font-size: 25px;
+    color: #2C3E50;
+    margin-bottom: 10px;
+    font-weight: bold;
+    text-align: left;
+}
+
+/*progressbar*/
+#progressbar {
+    margin-bottom: 30px;
+    overflow: hidden;
+    color: lightgrey;
+}
+
+#progressbar .active {
+    color: #000000;
+}
+
+#progressbar li {
+    list-style-type: none;
+    font-size: 12px;
+    width: 25%;
+    float: left;
+    position: relative;
+}
+
+/*Icons in the ProgressBar*/
+
+
+#progressbar #general:before {
+    font-family: FontAwesome;
+    content: "\f111";
+}
+
+#progressbar #fase1:before {
+    font-family: FontAwesome;
+    content: "\f111";
+}
+
+#progressbar #fase2:before {
+    font-family: FontAwesome;
+    content: "\f111";
+}
+
+#progressbar #fase3:before {
+    font-family: FontAwesome;
+    content: "\f111";
+}
+
+#progressbar #fase4:before {
+    font-family: FontAwesome;
+    content: "\f111";
+}
+
+#progressbar #fase5:before {
+    font-family: FontAwesome;
+    content: "\f111";
+}
+
+#progressbar #fase6:before {
+    font-family: FontAwesome;
+    content: "\f111";
+}
+
+
+
+
+/*ProgressBar before any progress*/
+#progressbar li:before {
+    /* width: 50px; */
+    /* height: 50px; */
+    line-height: 50px;
+    /* display: block; */
+    font-size: 15px;
+    color: gray;
+    /*background: lightgray;*/
+    /* border-radius: 50%; */
+    margin: 0 auto 10px auto;
+    padding: 2px;
+}
+
+/*ProgressBar connectors*/
+#progressbar li:after {
+    content: '';
+    width: 100%;
+    height: 2px;
+    background: lightgray;
+    position: absolute;
+    left: 0;
+    top: 25px;
+    z-index: -1;
+}
+
+
+
+/*Imaged Radio Buttons*/
+.radio-group {
+    position: relative;
+    margin-bottom: 25px;
+}
+
+.radio {
+    display: inline-block;
+    width: 204;
+    height: 104;
+    border-radius: 0;
+    background: lightblue;
+    box-shadow: 0 2px 2px 2px rgba(0, 0, 0, 0.2);
+    box-sizing: border-box;
+    cursor: pointer;
+    margin: 8px 2px;
+}
+
+.radio:hover {
+    box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.3);
+}
+
+.radio.selected {
+    box-shadow: 1px 1px 2px 2px rgba(0, 0, 0, 0.1);
+}
+
+/*Fit image in bootstrap div*/
+.fit-image {
+    width: 100%;
+    object-fit: cover;
+}
+
+ul#progressbar {
+    display: flex;
+}
+
+@media (max-width: 770px) {
+    ul {
+        display: table-footer-group;
+    }
+}
+
+@media (max-width: 539px) {
+    ul li:after {
+        font-family: FontAwesome;
+        content: "\f111";
+    }
+}
+
+
+
+.table td,
+.table th {
+    vertical-align: none !important;
+    border-top: none !important;
+}
+
+input[type=radio] {
+    border: 0px;
+    height: 1em;
+}
+
+.table-bordered tr,
+.table-bordered td,
+.table-bordered thead,
+.table-bordered th{
+    border: 1px solid black !important;
+}
+
+#dudas{
+    cursor: pointer;
+}
+
+.swal-wide{
+    width:850px !important;
+}
+
+.previousTop{
+    float: right;
+}
+
+#estratificacion th{
+    pointer-events: none;
+}
+
+.instrucciones{
+    font-size: small;
+}

@@ -1,0 +1,138 @@
+:root {
+	--Relayn: #f39831;
+	--Relep: #06a51b;
+	--Relen: #bf252b;
+	--Releem: #80287e;
+	--Relmo: #e95296;
+	--Redesla: #676665;
+	--font-primary-color: #000;
+	--btnPrimary: #44535e;
+	--btnSecundary: #798f8c;
+}
+
+@font-face {
+	font-family: 'avenir';
+	src: url(../../fonts/Avenir_Medium/Avenir\ Medium.ttf);
+}
+
+.bg-RELAYN {
+	background-color: var(--Relayn);
+}
+.bg-RELEP {
+	background-color: var(--Relep);
+}
+.bg-RELEN {
+	background-color: var(--Relen);
+}
+.bg-RELEEM {
+	background-color: var(--Releem);
+}
+.bg-RELMO {
+	background-color: var(--Relmo);
+}
+.bg-REDESLA {
+	background-color: var(--Redesla);
+}
+
+.RELAYN {
+	color: var(--Relayn);
+
+	text-decoration: none;
+}
+
+.RELEN {
+	color: var(--Relen);
+
+	text-decoration: none;
+}
+
+.RELEP {
+	color: var(--Relep);
+
+	text-decoration: none;
+}
+
+.RELEEM {
+	color: var(--Releem);
+
+	text-decoration: none;
+}
+
+.RELMO {
+	color: var(--Relmo);
+
+	text-decoration: none;
+}
+
+.REDESLA {
+	color: var(--Redesla);
+
+	text-decoration: none;
+}
+
+*{
+	font-family: avenir;
+}
+
+.container{
+	color: var(--font-primary-color);
+}
+
+body {
+	background-image: url("../../img/backgrounds/dictaminador.png");
+}
+
+#row_imagenes {
+	display: block;
+}
+
+.btnPrimary{
+	background-color: var(--btnPrimary);
+	color: #fff;
+}
+
+.btnSecundary{
+	background-color: var(--btnSecundary);
+	color: #fff;
+}
+
+h1,
+h2 {
+	color: #000;
+}
+
+img {
+	margin-left: 3%;
+}
+
+label {
+	color: #000;
+}
+
+button {
+	margin-bottom: 10px;
+}
+
+.container {
+	padding-bottom: 2rem;
+}
+
+section {
+	padding: 50px;
+
+	max-width: 900px;
+
+	margin: 30px auto;
+
+	background: white;
+
+	background: white;
+
+	backdrop-filter: blur(10px);
+
+	box-shadow: 0px 15px 10px rgba(0, 0, 0, 0.3);
+
+	border-radius: 20px;
+
+	transition: transform 0.2s ease-in-out;
+}
