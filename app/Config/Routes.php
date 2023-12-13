@@ -27,10 +27,11 @@ $routes->set404Override();
 # ==========LOGIN============
 $routes->get('/', 'LoginController::index');
 $routes->post('/login','LoginController::login');
+$routes->get('/logout','LoginController::logout');
 
 
 
-/* $routes->group('/admin', static function ($routes) {
+$routes->group('/admin', static function ($routes) {
 
     $routes->get('descargar/(:any)/(:any)', 'AdminController::descargarArchivos/$1/$2');
 
@@ -42,7 +43,39 @@ $routes->post('/login','LoginController::login');
         $routes->get('editar/(:num)', 'AdminController::editUsuario/$1');
         $routes->post('update', 'AdminController::updateUsuario');
         $routes->post('eliminar', 'AdminController::eliminarUsuario');
+        $routes->get('agregar', 'AdminController::agregarUsuario');
+        $routes->post('submitUsuario', 'AdminController::submitUsuario'); 
     });
+
+    $routes->group('facturas', static function ($routes){
+        $routes->get('todo', 'AdminController::facturasTodo');
+        $routes->get('lista', 'AdminController::facturas');
+        $routes->get('subir', 'AdminController::subirFacturas');
+        $routes->post('insert', 'AdminController::insertFacturas');
+        $routes->get('downloadBlobFiles/(:any)/(:num)','AdminController::downloadBlobFiles/$1/$2');
+        $routes->get('viewBlobFiles/(:any)/(:num)','AdminController::viewBlobFiles/$1/$2');
+        $routes->get('getListadoFacturas','AdminController::getListadoFacturas');
+        $routes->get('getListadoFacturasTodo','AdminController::getListadoFacturasTodo');
+        $routes->post('validateArchivosFacturas/(:num)', 'AdminController::validateArchivosFacturas/$1');
+        $routes->post('getArchivos/(:num)', 'AdminController::getArchivosFacturas/$1');
+    });
+
+    $routes->group('provedores', static function ($routes) {
+        $routes->get('lista', 'AdminController::provedores');
+        $routes->get('getListado', 'AdminController::getListadoUProvedores'); 
+        $routes->post('update', 'AdminController::updateProvedores');
+        $routes->post('delete', 'AdminController::deleteProvedores');
+        $routes->post('add', 'AdminController::addProvedores');
+    });
+    
+    $routes->group('metodos_pago', static function ($routes) {
+        $routes->get('lista', 'AdminController::metodosPago');
+        $routes->get('getListado', 'AdminController::getListadoMetodos'); 
+        $routes->post('update', 'AdminController::updateMetodosPago');
+        $routes->post('delete', 'AdminController::deleteMetodosPago');
+        $routes->post('add', 'AdminController::addMetodosPago');
+    });
+    /* ============================ */
 
     $routes->group('cuerpos', static function ($routes) {
         $routes->get('lista', 'AdminController::cuerpos');
@@ -488,7 +521,7 @@ $routes->post('/login','LoginController::login');
     $routes->get('visualizadorMails/(:any)', 'AdminController::visualizadorMails/$1');
     $routes->get('visualizadorComprobantes/(:any)', 'AdminController::visualizadorComprobantes/$1');
     $routes->get('visualizadorCSF/(:any)', 'AdminController::visualizadorCSF/$1');
-}); */
+});
 
 if (is_file(APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php')) {
     require APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php';

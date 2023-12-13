@@ -259,3 +259,8 @@ function loaderScreen(screen){
     screen.fadeOut()
   })
 }
+
+$(".profile_pic_change").on('click',function(e){
+  e.preventDefault()
+  $("#modalProfilePic").modal('show')
+})

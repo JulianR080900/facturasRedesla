@@ -174,6 +174,33 @@ class AdminModel extends Model{
 
     }
 
+    public function getDistinctYears($fechaColumna, $tabla, $condiciones)
+    {
+        $db = \Config\Database::connect('default');
+
+        $builder = $db->table($tabla)
+            ->distinct()
+            ->select("YEAR($fechaColumna) as anio")
+            ->where($condiciones);
+
+        return $builder->get()->getResultArray();
+    }
+
+    public function getFacturasPorAnioMes($anio, $mes, $condiciones)
+    {
+        $db = \Config\Database::connect('default');
+
+        $builder = $db->table('facturas')
+            ->select('*')
+            ->where("YEAR(fecha_factura)", $anio)
+            ->where("MONTH(fecha_factura)", $mes)
+            ->where($condiciones);
+        
+        #$sql = $builder->getCompiledSelect();
+        #return $sql;
+        return $builder->get()->getResultArray();
+    }
+
     public function count($tabla,$condiciones){
         $db = \Config\Database::connect('default');
         $builder = $db->table($tabla)

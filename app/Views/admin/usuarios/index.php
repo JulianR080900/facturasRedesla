@@ -11,7 +11,6 @@
                                     <th class="centered"></th>
                                     <th class="centered">Nombre</th>
                                     <th class="centered">Correo</th>
-                                    <th class="centered">Correo institucional</th>
                                     <th class="centered">Editar</th>
                                     <th class="centered">Eliminar</th>
                                 </tr>
@@ -20,6 +19,10 @@
 
                             </tbody>
                         </table>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <a href="./agregar" class="btn btn-block btn-md btn-success">Agregar usuario</a>
                     </div>
                 </div>
             </div>

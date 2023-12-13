@@ -92,16 +92,16 @@
             </div>
             <a href="#" id="profile-dropdown" data-toggle="dropdown"><i class="mdi mdi-dots-vertical"></i></a>
             <div class="dropdown-menu dropdown-menu-right sidebar-dropdown preview-list" aria-labelledby="profile-dropdown">
-              <a href="#" class="dropdown-item preview-item">
+              <button type="button" href="#" class="dropdown-item preview-item profile_pic_change">
                 <div class="preview-thumbnail">
                   <div class="preview-icon bg-dark rounded-circle">
                     <i class="mdi mdi-settings text-primary"></i>
                   </div>
                 </div>
                 <div class="preview-item-content">
-                  <p class="preview-subject ellipsis mb-1 text-small">Account settings</p>
+                  <p class="preview-subject ellipsis mb-1 text-small">Cambiar foto de perfil</p>
                 </div>
-              </a>
+              </button>
               <div class="dropdown-divider"></div>
               <a href="#" class="dropdown-item preview-item">
                 <div class="preview-thumbnail">
@@ -131,7 +131,7 @@
           <span class="nav-link">Menú</span>
         </li>
         <?php
-        if (session('nombre') == 'Ing. Paula') {
+        if (session('nombre') == 'Oscar') {
         ?>
           <li class="nav-item menu-items">
             <a class="nav-link" href="<?= base_url('/admin/dashboard') ?>">
@@ -150,573 +150,48 @@
             </a>
           </li>
           <li class="nav-item menu-items">
-            <a class="nav-link" data-toggle="collapse" href="#menu_cuerpos_academicos" aria-expanded="false" aria-controls="ui-basic">
-              <span class="menu-icon">
-                <i class="mdi mdi-home-modern"></i>
-              </span>
-              <span class="menu-title">Cuerpos académicos</span>
-              <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="menu_cuerpos_academicos">
-              <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="<?= base_url('/admin/cuerpos/lista') ?>">Listado</a></li>
-                <li class="nav-item"> <a class="nav-link" href="<?= base_url('/admin/cuerpos/mensajes') ?>">Mensajes de validación</a></li>
-                <li class="nav-item"> <a class="nav-link" href="<?= base_url('/admin/cuerpos/orden_autores/lista') ?>">Orden de autores</a></li>
-              </ul>
-            </div>
-          </li>
-          <li class="nav-item menu-items">
-            <a class="nav-link" data-toggle="collapse" href="#menu_libros" aria-expanded="false" aria-controls="ui-basic">
-              <span class="menu-icon">
-                <i class="mdi mdi-book-open-page-variant"></i>
-              </span>
-              <span class="menu-title">Libros</span>
-              <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="menu_libros">
-              <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="<?= base_url('/admin/libros/lista') ?>">Listado</a></li>
-                <li class="nav-item"> <a class="nav-link" href="<?= base_url('/admin/libros/carta') ?>">Carta de dictamen</a></li>
-                <li class="nav-item"> <a class="nav-link" href="<?= base_url('/admin/libros/editoriales/lista') ?>">Casas editoriales</a></li>
-              </ul>
-            </div>
-          </li>
-          <li class="nav-item menu-items">
-            <a class="nav-link" data-toggle="collapse" href="#menu_constancias" aria-expanded="false" aria-controls="ui-basic">
-              <span class="menu-icon">
-                <i class="mdi mdi-certificate"></i>
-              </span>
-              <span class="menu-title">Constancias</span>
-              <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="menu_constancias">
-              <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="<?= base_url('/admin/constancias/agregar') ?>">Agregar constancia</a></li>
-              </ul>
-            </div>
-          </li>
-          <li class="nav-item menu-items">
-            <a class="nav-link" data-toggle="collapse" href="#menu_miembros" aria-expanded="false" aria-controls="ui-basic">
-              <span class="menu-icon">
-                <i class="mdi mdi-account-multiple"></i>
-              </span>
-              <span class="menu-title">Miembros</span>
-              <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="menu_miembros">
-              <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="<?= base_url('/admin/miembros/lista') ?>">Lista</a></li>
-              </ul>
-            </div>
-          </li>
-          <li class="nav-item menu-items">
-            <a class="nav-link" data-toggle="collapse" href="#menu_proyectos" aria-expanded="false" aria-controls="ui-basic">
-              <span class="menu-icon">
-                <i class="mdi mdi-lightbulb"></i>
-              </span>
-              <span class="menu-title">Proyectos de la red</span>
-              <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="menu_proyectos">
-              <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="<?= base_url('/admin/proyectos/lista') ?>">Lista</a></li>
-              </ul>
-            </div>
-          </li>
-          <li class="nav-item menu-items">
-            <a class="nav-link" data-toggle="collapse" href="#menu_finanzas" aria-expanded="false" aria-controls="ui-basic">
-              <span class="menu-icon">
-                <i class="mdi mdi-cash-multiple"></i>
-              </span>
-              <span class="menu-title">Finanzas</span>
-              <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="menu_finanzas">
-              <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="<?= base_url('/admin/finanzas/proyectos/lista') ?>">Lista de proyectos</a></li>
-                <li class="nav-item"> <a class="nav-link" href="<?= base_url('/admin/finanzas/movimientos/lista') ?>">Movimientos</a></li>
-                <li class="nav-item"> <a class="nav-link" href="<?= base_url('/admin/finanzas/facturas/lista') ?>">Facturas</a></li>
-              </ul>
-            </div>
-          </li>
-          <li class="nav-item menu-items">
-            <a class="nav-link" data-toggle="collapse" href="#menu_congreso" aria-expanded="false" aria-controls="ui-basic">
-              <span class="menu-icon">
-                <i class="mdi mdi-clipboard-check"></i>
-              </span>
-              <span class="menu-title">Instrucciones</span>
-              <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="menu_congreso">
-              <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="<?= base_url('/admin/congresos/instrucciones') ?>">Instrucciones</a></li>
-              </ul>
-            </div>
-          </li>
-          <li class="nav-item menu-items">
-            <a class="nav-link" data-toggle="collapse" href="#menu_cursos" aria-expanded="false" aria-controls="ui-basic">
-              <span class="menu-icon">
-                <i class="mdi mdi-book"></i>
-              </span>
-              <span class="menu-title">Cursos</span>
-              <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="menu_cursos">
-              <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="<?= base_url('/admin/cursos/metodologia/lista') ?>">Metodología 18a edición</a></li>
-              </ul>
-            </div>
-          </li>
-          <li class="nav-item menu-items">
-            <a class="nav-link" href="<?= base_url('/admin/carpetas/lista') ?>">
-              <span class="menu-icon">
-                <i class="mdi mdi-folder"></i>
-              </span>
-              <span class="menu-title">Carpetas</span>
-            </a>
-          </li>
-
-          <li class="nav-item nav-category">
-            <span class="nav-link">Investigaciones</span>
-          </li>
-
-          <li class="nav-item menu-items">
-            <a class="nav-link" data-toggle="collapse" href="#menu_equipos_investigaciones" aria-expanded="false" aria-controls="ui-basic">
-              <span class="menu-icon">
-                <i class="mdi mdi-book"></i>
-              </span>
-              <span class="menu-title">Datos y revisiones</span>
-              <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="menu_equipos_investigaciones">
-            <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="<?= base_url('/admin/investigaciones/Relayn/2024/inicio') ?>">Relayn 2024</a></li>
-              </ul>
-              <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="<?= base_url('/admin/investigaciones/equipos/Relayn/2023') ?>">Relayn 2023</a></li>
-              </ul>
-              <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="<?= base_url('/admin/investigaciones/equipos/Relep/2023') ?>">Relep 2023</a></li>
-              </ul>
-              <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="<?= base_url('/admin/investigaciones/equipos/Relen/2023') ?>">Relen 2023</a></li>
-              </ul>
-            </div>
-          </li>
-
-          <li class="nav-item menu-items">
-            <a class="nav-link" href="<?= base_url('admin/investigaciones/cartas/inicio') ?>">
-              <span class="menu-icon">
-                <i class="mdi mdi-certificate"></i>
-              </span>
-              <span class="menu-title">Cartas</span>
-            </a>
-          </li>
-
-          <li class="nav-item menu-items">
-            <a class="nav-link" href="<?= base_url('admin/investigaciones/marcajes/inicio') ?>">
-              <span class="menu-icon">
-                <i class="mdi mdi-certificate"></i>
-              </span>
-              <span class="menu-title">Marcajes</span>
-            </a>
-          </li>
-
-          <li class="nav-item nav-category">
-            <span class="nav-link">Congresos</span>
-          </li>
-          <li class="nav-item menu-items">
-            <a class="nav-link" href="<?= base_url('/admin/congresos/lista') ?>">
-              <span class="menu-icon">
-                <i class="mdi mdi-format-list-bulleted"></i>
-              </span>
-              <span class="menu-title">Lista de congresos</span>
-            </a>
-          </li>
-          <li class="nav-item menu-items">
-            <a class="nav-link" href="<?= base_url('/admin/congresos/cartas/lista') ?>">
-              <span class="menu-icon">
-                <i class="mdi mdi-certificate"></i>
-              </span>
-              <span class="menu-title">Cartas de aceptación</span>
-            </a>
-          </li>
-          <li class="nav-item menu-items">
-            <a class="nav-link" href="<?= base_url('/admin/congresos/asistencia/inicio') ?>">
-              <span class="menu-icon">
-                <i class="mdi mdi-account-check"></i>
-              </span>
-              <span class="menu-title">Asistencia</span>
-            </a>
-          </li>
-          <li class="nav-item menu-items">
-            <a class="nav-link" href="<?= base_url('/admin/congresos/ponencias/lista') ?>">
-              <span class="menu-icon">
-                <i class="mdi mdi-school"></i>
-              </span>
-              <span class="menu-title">Ponencias registradas</span>
-            </a>
-          </li>
-          <li class="nav-item menu-items">
-            <a class="nav-link" href="<?= base_url('/admin/congresos/participantes/lista') ?>">
-              <span class="menu-icon">
-                <i class="mdi mdi-format-list-bulleted"></i>
-              </span>
-              <span class="menu-title">Lista de participantes</span>
-            </a>
-          </li>
-          <li class="nav-item menu-items">
-            <a class="nav-link" href="<?= base_url('/admin/congresos/moderadores/lista') ?>">
-              <span class="menu-icon">
-                <i class="mdi mdi-account-multiple"></i>
-              </span>
-              <span class="menu-title">Moderadores</span>
-            </a>
-          </li>
-          <li class="nav-item menu-items">
-            <a class="nav-link" href="<?= base_url('/admin/congresos/enlaces/lista') ?>">
-              <span class="menu-icon">
-                <i class="mdi mdi-account-multiple"></i>
-              </span>
-              <span class="menu-title">Enlaces</span>
-            </a>
-          </li>
-          <li class="nav-item menu-items">
-            <a class="nav-link" href="<?= base_url('/admin/congresos/mesas/lista') ?>">
-              <span class="menu-icon">
-                <i class="mdi mdi-tablet"></i>
-              </span>
-              <span class="menu-title">Mesas</span>
-            </a>
-          </li>
-          <li class="nav-item menu-items">
-            <a class="nav-link" href="<?= base_url('/admin/congresos/horarios/lista') ?>">
-              <span class="menu-icon">
-                <i class="mdi mdi-calendar-clock"></i>
-              </span>
-              <span class="menu-title">Horarios de ponencias</span>
-            </a>
-          </li>
-          <li class="nav-item menu-items">
-            <a class="nav-link" data-toggle="collapse" href="#menu_ganadores" aria-expanded="false" aria-controls="ui-basic">
-              <span class="menu-icon">
-                <i class="mdi mdi-crown"></i>
-              </span>
-              <span class="menu-title">Ganadores</span>
-              <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="menu_ganadores">
-              <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="<?= base_url('/admin/congresos/ganadores/lista/Relayn/2022') ?>">Relayn 2022</a></li>
-                <li class="nav-item"> <a class="nav-link" href="<?= base_url('/admin/congresos/ganadores/lista/Relep/2022') ?>">Relep 2022</a></li>
-                <li class="nav-item"> <a class="nav-link" href="<?= base_url('/admin/congresos/ganadores/lista/Relen/2022') ?>">Relen 2022</a></li>
-                <li class="nav-item"> <a class="nav-link" href="<?= base_url('/admin/congresos/ganadores/lista/Releg/2023') ?>">Releg 2023</a></li>
-              </ul>
-            </div>
-          </li>
-
-        <?php
-        } else if (session('nombre') == 'Dra. Nuria') {
-        ?>
-          <li class="nav-item menu-items">
-            <a class="nav-link" href="<?= base_url('/admin/entrevistas/lista') ?>">
+            <a class="nav-link" href="<?= base_url('/admin/facturas/todo') ?>">
               <span class="menu-icon">
                 <i class="mdi mdi-account-multiple-outline"></i>
               </span>
-              <span class="menu-title">Equipos RELEG</span>
-            </a>
-          </li>
-          <li class="nav-item menu-items">
-            <a class="nav-link" href="<?= base_url('/admin/categorias/lista') ?>">
-              <span class="menu-icon">
-                <i class="mdi mdi-format-list-bulleted"></i>
-              </span>
-              <span class="menu-title">Lista de categorías</span>
-            </a>
-          </li>
-          <li class="nav-item menu-items">
-            <a class="nav-link" href="<?= base_url('/admin/categorias/digitales/dimensiones/lista') ?>">
-              <span class="menu-icon">
-                <i class="mdi mdi-format-list-bulleted"></i>
-              </span>
-              <span class="menu-title">Lista de dimensiones</span>
-            </a>
-          </li>
-          <li class="nav-item menu-items">
-            <a class="nav-link" href="<?= base_url('/admin/capitulos/impresos/lista') ?>">
-              <span class="menu-icon">
-                <i class="mdi mdi-format-list-bulleted"></i>
-              </span>
-              <span class="menu-title">Lista de capítulos impresos</span>
-            </a>
-          </li>
-          <li class="nav-item menu-items">
-            <a class="nav-link" href="<?= base_url('/admin/capitulos/digitales/lista') ?>">
-              <span class="menu-icon">
-                <i class="mdi mdi-format-list-bulleted"></i>
-              </span>
-              <span class="menu-title">Lista de capítulos digitales</span>
-            </a>
-          </li>
-        <?php
-        } else if (session('nombre') == 'Lic. Sergio') {
-        ?>
-          <li class="nav-item menu-items">
-            <a class="nav-link" href="<?= base_url('/admin/imagenes/marcos') ?>">
-              <span class="menu-icon">
-                <i class="mdi mdi-account-multiple-outline"></i>
-              </span>
-              <span class="menu-title">Marcos para Facebook</span>
-            </a>
-          </li>
-        <?php
-        } else if (session('nombre') == 'Ing. Sylvia') {
-        ?>
-          <li class="nav-item menu-items">
-            <a class="nav-link" data-toggle="collapse" href="#menu_cuerpos_academicos" aria-expanded="false" aria-controls="ui-basic">
-              <span class="menu-icon">
-                <i class="mdi mdi-home-modern"></i>
-              </span>
-              <span class="menu-title">Cuerpos académicos</span>
-              <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="menu_cuerpos_academicos">
-              <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="<?= base_url('/admin/cuerpos/orden_autores/lista') ?>">Orden de autores</a></li>
-              </ul>
-            </div>
-          </li>
-          <li class="nav-item menu-items">
-            <a class="nav-link" data-toggle="collapse" href="#menu_equipos_investigaciones" aria-expanded="false" aria-controls="ui-basic">
-              <span class="menu-icon">
-                <i class="mdi mdi-book"></i>
-              </span>
-              <span class="menu-title">Investigaciones</span>
-              <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="menu_equipos_investigaciones">
-              <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="<?= base_url('/admin/investigaciones/equipos/Relayn/2023') ?>">Relayn 2023</a></li>
-              </ul>
-              <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="<?= base_url('/admin/investigaciones/equipos/Relep/2023') ?>">Relep 2023</a></li>
-              </ul>
-              <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="<?= base_url('/admin/investigaciones/equipos/Relen/2023') ?>">Relen 2023</a></li>
-              </ul>
-            </div>
-          </li>
-          <li class="nav-item menu-items">
-            <a class="nav-link" href="<?= base_url('/admin/carpetas/lista') ?>">
-              <span class="menu-icon">
-                <i class="mdi mdi-folder"></i>
-              </span>
-              <span class="menu-title">Carpetas</span>
-            </a>
-          </li>
-        <?php
-        } else if (session('nombre') == 'Promoción') {
-        ?>
-          <li class="nav-item menu-items">
-            <a class="nav-link" data-toggle="collapse" href="#menu_cuerpos_academicos" aria-expanded="false" aria-controls="ui-basic">
-              <span class="menu-icon">
-                <i class="mdi mdi-home-modern"></i>
-              </span>
-              <span class="menu-title">Cuerpos académicos</span>
-              <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="menu_cuerpos_academicos">
-              <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="<?= base_url('/admin/cuerpos/lista') ?>">Listado</a></li>
-                <li class="nav-item"> <a class="nav-link" href="<?= base_url('/admin/cuerpos/mensajes') ?>">Mensajes de validación</a></li>
-                <li class="nav-item"> <a class="nav-link" href="<?= base_url('/admin/cuerpos/orden_autores/lista') ?>">Orden de autores</a></li>
-              </ul>
-            </div>
-          </li>
-          <li class="nav-item menu-items">
-            <a class="nav-link" data-toggle="collapse" href="#menu_miembros" aria-expanded="false" aria-controls="ui-basic">
-              <span class="menu-icon">
-                <i class="mdi mdi-account-multiple"></i>
-              </span>
-              <span class="menu-title">Miembros</span>
-              <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="menu_miembros">
-              <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="<?= base_url('/admin/miembros/lista') ?>">Lista</a></li>
-              </ul>
-            </div>
-          </li>
-          <li class="nav-item menu-items">
-            <a class="nav-link" href="<?= base_url('/admin/usuarios/lista') ?>">
-              <span class="menu-icon">
-                <i class="mdi mdi-account-multiple-outline"></i>
-              </span>
-              <span class="menu-title">Usuarios</span>
-            </a>
-          </li>
-          <li class="nav-item menu-items">
-            <a class="nav-link" data-toggle="collapse" href="#menu_libros" aria-expanded="false" aria-controls="ui-basic">
-              <span class="menu-icon">
-                <i class="mdi mdi-book-open-page-variant"></i>
-              </span>
-              <span class="menu-title">Libros</span>
-              <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="menu_libros">
-              <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="<?= base_url('/admin/libros/lista') ?>">Listado</a></li>
-                <li class="nav-item"> <a class="nav-link" href="<?= base_url('/admin/libros/carta') ?>">Carta de dictamen</a></li>
-              </ul>
-            </div>
-          </li>
-          <li class="nav-item menu-items">
-            <a class="nav-link" data-toggle="collapse" href="#menu_congreso" aria-expanded="false" aria-controls="ui-basic">
-              <span class="menu-icon">
-                <i class="mdi mdi-account-multiple"></i>
-              </span>
-              <span class="menu-title">Instrucciones</span>
-              <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="menu_congreso">
-              <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="<?= base_url('/admin/congresos/instrucciones') ?>">Instrucciones</a></li>
-              </ul>
-            </div>
-          </li>
-          <li class="nav-item menu-items">
-            <a class="nav-link" data-toggle="collapse" href="#menu_equipos_investigaciones" aria-expanded="false" aria-controls="ui-basic">
-              <span class="menu-icon">
-                <i class="mdi mdi-book"></i>
-              </span>
-              <span class="menu-title">Investigaciones</span>
-              <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="menu_equipos_investigaciones">
-              <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="<?= base_url('/admin/investigaciones/equipos/Relayn/2023') ?>">Relayn 2023</a></li>
-              </ul>
-              <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="<?= base_url('/admin/investigaciones/equipos/Relep/2023') ?>">Relep 2023</a></li>
-              </ul>
-              <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="<?= base_url('/admin/investigaciones/equipos/Relen/2023') ?>">Relen 2023</a></li>
-              </ul>
-            </div>
-          </li>
-          <li class="nav-item nav-category">
-            <span class="nav-link">Congresos</span>
-          </li>
-          <li class="nav-item menu-items">
-            <a class="nav-link" href="<?= base_url('/admin/congresos/ponencias/lista') ?>">
-              <span class="menu-icon">
-                <i class="mdi mdi-school"></i>
-              </span>
-              <span class="menu-title">Ponencias registradas</span>
-            </a>
-          </li>
-          <li class="nav-item menu-items">
-            <a class="nav-link" href="<?= base_url('/admin/congresos/participantes/lista') ?>">
-              <span class="menu-icon">
-                <i class="mdi mdi-format-list-bulleted"></i>
-              </span>
-              <span class="menu-title">Lista de participantes</span>
-            </a>
-          </li>
-        <?php
-        } else if (session('nombre') == 'Nadia') {
-        ?>
-          <li class="nav-item menu-items">
-            <a class="nav-link" data-toggle="collapse" href="#menu_constancias" aria-expanded="false" aria-controls="ui-basic">
-              <span class="menu-icon">
-                <i class="mdi mdi-certificate"></i>
-              </span>
-              <span class="menu-title">Constancias</span>
-              <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="menu_constancias">
-              <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="<?= base_url('/admin/constancias/agregar') ?>">Agregar constancia</a></li>
-              </ul>
-            </div>
-          </li>
-          <li class="nav-item menu-items">
-            <a class="nav-link" data-toggle="collapse" href="#menu_libros" aria-expanded="false" aria-controls="ui-basic">
-              <span class="menu-icon">
-                <i class="mdi mdi-book-open-page-variant"></i>
-              </span>
-              <span class="menu-title">Libros</span>
-              <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="menu_libros">
-              <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="<?= base_url('/admin/libros/lista') ?>">Listado</a></li>
-              </ul>
-            </div>
-          </li>
-          <li class="nav-item menu-items">
-            <a class="nav-link" data-toggle="collapse" href="#menu_dictamen" aria-expanded="false" aria-controls="ui-basic">
-              <span class="menu-icon">
-                <i class="mdi mdi-certificate"></i>
-              </span>
-              <span class="menu-title">Cartas</span>
-              <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="menu_dictamen">
-              <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="<?= base_url('/admin/dictamen/libro_congreso/lista') ?>">Lista de libros derivados de congreso</a></li>
-              </ul>
-            </div>
-          </li>
-        <?php
-        } else if (session('nombre') == 'Lic. Aracely') {
-        ?>
-          <li class="nav-item nav-category">
-            <span class="nav-link">Congresos</span>
-          </li>
-          <li class="nav-item menu-items">
-            <a class="nav-link" href="<?= base_url('/admin/congresos/lista') ?>">
-              <span class="menu-icon">
-                <i class="mdi mdi-format-list-bulleted"></i>
-              </span>
-              <span class="menu-title">Lista de congresos</span>
-            </a>
-          </li>
-        <?php
-        } else if (session('user_type') == 2) {
-          #moderadores
-        ?>
-          <li class="nav-item menu-items">
-            <a class="nav-link" href="<?= base_url('/admin/congresos/horarios/moderadores/lista') ?>">
-              <span class="menu-icon">
-                <i class="mdi mdi-calendar-clock"></i>
-              </span>
-              <span class="menu-title">Horarios de ponencias</span>
-            </a>
-          </li>
-        <?php
-        } else if (session('user_type') == 4) {
-          #moderadores
-        ?>
-          <li class="nav-item menu-items">
-            <a class="nav-link" href="<?= base_url('/admin/congresos/horarios/enlaces/instrucciones') ?>">
-              <span class="menu-icon">
-                <i class="mdi mdi-calendar-clock"></i>
-              </span>
-              <span class="menu-title">Instrucciones virtuales</span>
-            </a>
-          </li>
-          <li class="nav-item menu-items">
-            <a class="nav-link" href="<?= base_url('/admin/congresos/horarios/enlaces/lista') ?>">
-              <span class="menu-icon">
-                <i class="mdi mdi-calendar-clock"></i>
-              </span>
-              <span class="menu-title">Horarios de ponencias</span>
+              <span class="menu-title">Todas las facturas</span>
             </a>
           </li>
         <?php
         }
         ?>
+        <li class="nav-item menu-items">
+            <a class="nav-link" data-toggle="collapse" href="#menu_cuerpos_academicos" aria-expanded="false" aria-controls="ui-basic">
+              <span class="menu-icon">
+                <i class="mdi mdi-home-modern"></i>
+              </span>
+              <span class="menu-title">Mis facturas</span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="menu_cuerpos_academicos">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"> <a class="nav-link" href="<?= base_url('/admin/facturas/lista') ?>">Listado</a></li>
+                <li class="nav-item"> <a class="nav-link" href="<?= base_url('/admin/facturas/subir') ?>">Subir factura</a></li>
+              </ul>
+            </div>
+          </li>
+
+          <li class="nav-item menu-items">
+            <a class="nav-link" href="<?= base_url('/admin/provedores/lista') ?>">
+              <span class="menu-icon">
+                <i class="mdi mdi-account-multiple-outline"></i>
+              </span>
+              <span class="menu-title">Provedores</span>
+            </a>
+          </li>
+          <li class="nav-item menu-items">
+            <a class="nav-link" href="<?= base_url('/admin/metodos_pago/lista') ?>">
+              <span class="menu-icon">
+                <i class="mdi mdi-account-multiple-outline"></i>
+              </span>
+              <span class="menu-title">Metodos de pago</span>
+            </a>
+          </li>
       </ul>
     </nav>
     <!-- partial -->

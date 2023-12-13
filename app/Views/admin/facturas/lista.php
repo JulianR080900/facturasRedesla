@@ -2,20 +2,21 @@
     <div class="col-lg-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title text-uppercase">Lista de facturas</h4>
+                <h4 class="card-title text-uppercase">Mis facturas</h4>
                 <hr>
                 <div class="table-responsive">
                     <table class="table" id="dt_facturas">
                         <thead>
                             <tr>
                                 <th class="centered">ID</th>
-                                <th class="centered">Clave</th>
-                                <th class="centered">Nombre del Proyecto</th>
-                                <th class="centered">Tipo</i></th>
-                                <th class="centered">Comprobante (s)</th>
-                                <th class="centered">Estado</i></th>
-                                <th class="centered">Información</th>
-                                <th class="centered">Eliminar</th>
+                                <th class="centered">Monto</th>
+                                <th class="centered">Provedor</th>
+                                <th class="centered">Método de pago</th>
+                                <th class="centered">Archivo PDF</i></th>
+                                <th class="centered">Archivo XML</th>
+                                <th class="centered">Fecha del pago</i></th>
+                                <th class="centered">Fecha de factura</th>
+                                <th class="centered">Fecha de inserción al sistema</th>
                             </tr>
                         </thead>
                         <tbody id="dt_facturas">

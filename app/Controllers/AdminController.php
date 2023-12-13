@@ -24,11 +24,13 @@ use PhpOffice\PhpWord\PhpWord;
 
 use CodeIgniter\Files\File;
 use CodeIgniter\HTTP\DownloadResponse;
+use NumberFormatter;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use Smalot\PdfParser\Parser;
 
 
 use TCPDF;
+use ZipArchive;
 
 use function PHPSTORM_META\map;
 use function PHPUnit\Framework\isNull;
@@ -118,13 +120,9 @@ class AdminController extends BaseController
         helper('cookie');
         helper('session');
         date_default_timezone_set('America/Monterrey');
-        $db = db_connect('iquatro');
         $this->AdminModel = new AdminModel();
-        $this->IquatroModel = new IquatroModel($db);
         $this->CuestionariosModel = new CuestionariosModel();
         $this->CursosModel = new CursosModel();
-        $this->db_serv_cuest = \Config\Database::connect('cuestionarios');
-        $this->db_cursos = \Config\Database::connect('cursos');
         $this->db_serv = \Config\Database::connect();
         $this->charsUsuario = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
@@ -314,25 +312,6 @@ class AdminController extends BaseController
         readfile($ruta_completo);
     }
 
-    private function pre($data){
-        echo '<pre>';
-        print_r($data);
-        echo '</pre>';
-        exit;
-    }
-
-    public function index()
-    {
-
-        if (session('user_type') == 0) {
-            return redirect()->to(base_url());
-        }
-
-        return view('admin/headers/index')
-            . view('admin/index')
-            . view('admin/footers/index');
-    }
-
     public function generalUpdate($tabla)
     {
 
@@ -437,10 +416,42 @@ class AdminController extends BaseController
         }
     }
 
-    #====================USUARIOS=======================
+    #==================== FUNCIONES QUE SE VAN A DEJAR =======================
 
-    public function usuarios()
-    {
+    private function pre($data){
+        echo '<pre>';
+        print_r($data);
+        echo '</pre>';
+        exit;
+    }
+
+    public function index(){
+
+        if (session('user_type') == 0) {
+            return redirect()->to(base_url());
+        }
+
+        return view('admin/headers/index')
+            . view('admin/index')
+            . view('admin/footers/index');
+    }
+
+    private function generateRandom($strength){
+
+        $permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        
+        $input_length = strlen($permitted_chars);
+
+        $random_string = '';
+
+        for ($i = 0; $i < $strength; $i++) {
+            $random_character = $permitted_chars[mt_rand(0, $input_length - 1)];
+            $random_string .= $random_character;
+        }
+        return $random_string;
+    }
+
+    public function usuarios(){
 
         if (session('user_type') == 0) {
             session_destroy();
@@ -452,8 +463,7 @@ class AdminController extends BaseController
             . view('admin/footers/index');
     }
 
-    public function getListadoUsuarios()
-    {
+    public function getListadoUsuarios(){
 
         $columnas = [
             'id', 'nombre', 'ap_paterno', 'ap_materno', 'usuario', 'correo', 'correo_institucional'
@@ -488,8 +498,7 @@ class AdminController extends BaseController
         echo json_encode($json_data);
     }
 
-    public function editUsuario($id)
-    {
+    public function editUsuario($id){
 
         if (session('user_type') == 0) {
             session_destroy();
@@ -513,8 +522,7 @@ class AdminController extends BaseController
             . view('admin/footers/index');
     }
 
-    public function updateUsuario()
-    {
+    public function updateUsuario(){
         //NO SE PUEDE INGRESAR POR GET A ESTA DIRECCION
         //LO HACEMOS INDIVIDUAL PORQUE CADA UNO TIENE CONDICIONES ESPECIFICAS
         #PENDIENTE ACTUALIZAR LA FOTO DE PERFIL
@@ -579,8 +587,7 @@ class AdminController extends BaseController
         }
     }
 
-    public function eliminarUsuario()
-    {
+    public function eliminarUsuario(){
 
         if (session('user_type') == 0) {
             session_destroy();
@@ -647,6 +654,916 @@ class AdminController extends BaseController
         } else {
             return 'error';
         }
+    }
+    
+    public function agregarUsuario(){
+
+        if (session('user_type') == 0) {
+            session_destroy();
+            return redirect()->to(base_url());
+        }
+
+        return view('admin/headers/index')
+            . view('admin/usuarios/agregar')
+            . view('admin/footers/index');
+    }
+
+    public function submitUsuario(){
+
+        if (session('user_type') == 0) {
+            session_destroy();
+            return redirect()->to(base_url());
+        }
+
+        $pass = password_hash($_POST['correo'], PASSWORD_DEFAULT);
+        if(!empty($_POST['password'])){
+            $pass = password_hash($_POST['password'], PASSWORD_DEFAULT);
+        }
+
+        $usuario = $this->generateRandom(20);
+
+        $data = [
+            'nombre' => $_POST['nombre'],
+            'ap_paterno' => $_POST['ap_paterno'],
+            'ap_materno' => $_POST['ap_materno'],
+            'sexo' => $_POST['sexo'],
+            'correo' => $_POST['correo'],
+            'password' => $pass,
+            'usuario' => $usuario,
+            'tipo_usuario' => 1
+        ];
+
+        if(!$this->AdminModel->generalInsert('usuarios',$data)){
+            return redirect()->back()
+            ->with('icon', 'error')
+            ->with('title', 'Lo sentimos')
+            ->with('text', 'Ha ocurrido un error, intentelo mas tarde');
+        }else{
+            return redirect()->to(base_url('/admin/usuarios/lista'))
+                ->with('icon', 'success')
+                ->with('title', '¡Éxito!')
+                ->with('text', 'Usuario agregado correctamente');
+        }
+    }
+
+    public function facturas(){
+        if (session('user_type') == 0) {
+            session_destroy();
+            return redirect()->to(base_url());
+        }
+
+        return view('admin/headers/index')
+            . view('admin/facturas/lista')
+            . view('admin/footers/index');
+    }
+
+    public function facturasTodo(){
+        if (session('user_type') == 0) {
+            session_destroy();
+            return redirect()->to(base_url());
+        }
+
+        $columnas = ['fecha_factura'];
+
+        $anios = $this->AdminModel->getDistinctYears('fecha_factura','facturas',[]);
+
+        $data = [
+            'anios' => $anios
+        ];
+
+        return view('admin/headers/index')
+            . view('admin/facturas/todoLista',$data)
+            . view('admin/footers/index');
+    }
+
+    public function validateArchivosFacturas($admin)
+{
+    // Validar la autenticación o permisos adecuados aquí
+
+    $anio = isset($_POST['anio']) ? $_POST['anio'] : null;
+    $mes = isset($_POST['mes']) ? $_POST['mes'] : null;
+
+    // Validar y sanear las variables POST según sea necesario
+
+    $condiciones = $admin == 1 ? [] : ['usuario' => session('usuario')];
+    $facturas = $this->AdminModel->getFacturasPorAnioMes($anio, $mes, $condiciones);
+
+    if (empty($facturas)) {
+        http_response_code(404); // Cambié el código de respuesta HTTP a 404 para "No encontrado"
+        echo json_encode(['error' => 'No se encontraron facturas para la fecha especificada']);
+        return;
+    }
+
+    $zip = new ZipArchive();
+
+    // Manejo de errores al abrir el archivo ZIP
+    if ($zip->open('archivo.zip', ZipArchive::CREATE) !== true) {
+        http_response_code(500); // Error interno del servidor
+        echo json_encode(['error' => 'Error al crear el archivo ZIP']);
+        return;
+    }
+
+    foreach($facturas as $f){
+        $carpeta = "Factura_ID_{$f['id']}";
+        $zip->addEmptyDir($carpeta);
+
+        $blobPDF = $f['factura_pdf'];
+        $ruta = "$carpeta/Factura.pdf";
+        $zip->addFromString($ruta, $blobPDF);
+
+        if($f['factura_xml'] != null){
+            $blobXML = $f['factura_xml'];
+            $ruta = "$carpeta/Factura.xml";
+            $zip->addFromString($ruta, $blobXML);
+        }
+
+        $archivoDetalles = 'Detalles.txt';
+        $pathDigital = "$carpeta/$archivoDetalles";
+
+        $condiciones = ['id' => $f['metodo_pago']];
+        $metodo_pago = $this->AdminModel->getAllOneRow('metodos_pago',$condiciones);
+
+        $str_metodo = empty($metodo_pago) ? $f['metodo_pago'] : $metodo_pago['nombre'];
+
+        $condiciones = ['id' => $f['provedor']];
+        $provedor = $this->AdminModel->getAllOneRow('provedores',$condiciones);
+
+        $str_provedor = empty($provedor) ? $f['provedor'] : $provedor['nombre'];
+
+        $condiciones = ['usuario' => $f['inserted_by']];
+        $usuario = $this->AdminModel->getAllOneRow('usuarios',$condiciones);
+
+        $nombre_usuario = $usuario['nombre'].' '.$usuario['ap_paterno'].' '.$usuario['ap_materno'];
+
+        $contenido = "
+        ID de la factura: ".$f['id']." \n
+        Provedor: ".$str_provedor." \n
+        Método de pago: ".$str_metodo." \n
+        Detalles: ".$f['detalles']." \n
+        Monto: ".$f['monto']." ".$f['moneda']." \n
+        Fecha del pago: ".$f['fecha_pago']." \n
+        Fecha de la factura: ".$f['fecha_factura']." \n
+        Factura insertada por: ".$nombre_usuario."
+        ";
+
+        file_put_contents($archivoDetalles, $contenido);
+        
+        
+        $zip->addFile($archivoDetalles, $pathDigital);
+
+    }
+    
+
+    $zip->close();
+    // Leer el contenido del archivo ZIP
+    $zipContent = file_get_contents('archivo.zip');
+    // Envía el JSON antes de enviar el archivo ZIP
+    $this->response->setHeader('Content-Type', 'application/zip');
+    $this->response->setHeader('Content-Disposition', 'attachment; filename="archivo.zip"');
+
+    $zipName = "Facturas_".$this->obtenerNombreMes($_POST['mes'])."_".$_POST['anio'];
+    $zipName .= $admin == 1 ? '.zip' : "_".session('nombre').'_.zip';
+    echo json_encode([
+        'success' => true, 
+        'zipContent' => base64_encode($zipContent),
+        'zipName' => $zipName
+    ]);
+
+    // Elimina el archivo ZIP después de enviarlo
+    unlink('archivo.zip');
+}
+
+    private function obtenerNombreMes($numeroMes) {
+        $meses = [
+            1 => 'Enero',
+            2 => 'Febrero',
+            3 => 'Marzo',
+            4 => 'Abril',
+            5 => 'Mayo',
+            6 => 'Junio',
+            7 => 'Julio',
+            8 => 'Agosto',
+            9 => 'Septiembre',
+            10 => 'Octubre',
+            11 => 'Noviembre',
+            12 => 'Diciembre'
+        ];
+    
+        // Verificar si el número de mes está en el rango permitido
+        if ($numeroMes >= 1 && $numeroMes <= 12) {
+            return $meses[$numeroMes];
+        } else {
+            return 'Mes no válido';
+        }
+    }
+
+
+
+
+    public function getListadoFacturas(){
+        
+        $columnas = [
+            'id', 'provedor', 'detalles', 'monto', 'moneda',
+            'fecha_pago','fecha_factura','fecha_insert','inserted_by','metodo_pago'
+        ];
+
+        $tabla = 'facturas';
+
+        $dataSend = [
+            'valor_buscado' => $this->request->getGet('search')['value'], #VALOR A BUSCAR
+            'columnas' => $columnas,
+            'tabla' => $tabla,
+            'dir' => $this->request->getGet('order')[0]['dir'],
+            'start' => $this->request->getGet('start'),
+            'length' => $this->request->getGet('length'),
+            'order_column' => $this->request->getGet('order')[0]['column'],
+            'inner_join' => [
+                'usuarios' => [
+                    'join' => "usuarios.usuario = {$tabla}.inserted_by",
+                    'columnas' => ['nombre','ap_paterno','ap_materno'],
+                    'type' => 'LEFT JOIN'
+                ],
+                'provedores' => [
+                    'join' => "provedores.id = {$tabla}.provedor",
+                    'columnas' => ['nombre'],
+                    'type' => 'LEFT JOIN'
+                ],
+                'metodos_pago' => [
+                    'join' => "metodos_pago.id = {$tabla}.metodo_pago",
+                    'columnas' => ['nombre'],
+                    'type' => 'LEFT JOIN'
+                ],
+            ],
+            'where' => "{$tabla}.inserted_by = '".session('usuario')."'"
+        ];
+
+        $serverSide = $this->generateServerSideTable($dataSend);
+
+        $array = $serverSide['array'];
+        $total_count = $serverSide['total_count'];
+
+        $data = json_decode(json_encode($array), FALSE);
+
+        $json_data = [
+            'draw' => intval($this->request->getGet('draw')),
+            'recordsTotal' => $total_count->total,
+            'recordsFiltered' => $total_count->total,
+            'data' => $data
+        ];
+
+        echo json_encode($json_data);
+
+    }
+
+    public function getListadoFacturasTodo(){
+        
+        $columnas = [
+            'id', 'provedor', 'detalles', 'monto', 'moneda',
+            'fecha_pago','fecha_factura','fecha_insert','inserted_by','metodo_pago'
+        ];
+
+        $tabla = 'facturas';
+
+        $dataSend = [
+            'valor_buscado' => $this->request->getGet('search')['value'], #VALOR A BUSCAR
+            'columnas' => $columnas,
+            'tabla' => $tabla,
+            'dir' => $this->request->getGet('order')[0]['dir'],
+            'start' => $this->request->getGet('start'),
+            'length' => $this->request->getGet('length'),
+            'order_column' => $this->request->getGet('order')[0]['column'],
+            'inner_join' => [
+                'usuarios' => [
+                    'join' => "usuarios.usuario = {$tabla}.inserted_by",
+                    'columnas' => ['nombre','ap_paterno','ap_materno'],
+                    'type' => 'LEFT JOIN'
+                ],
+                'provedores' => [
+                    'join' => "provedores.id = {$tabla}.provedor",
+                    'columnas' => ['nombre'],
+                    'type' => 'LEFT JOIN'
+                ],
+                'metodos_pago' => [
+                    'join' => "metodos_pago.id = {$tabla}.metodo_pago",
+                    'columnas' => ['nombre'],
+                    'type' => 'LEFT JOIN'
+                ],
+            ],
+        ];
+
+        $serverSide = $this->generateServerSideTable($dataSend);
+
+        $array = $serverSide['array'];
+        $total_count = $serverSide['total_count'];
+
+        $data = json_decode(json_encode($array), FALSE);
+
+        $json_data = [
+            'draw' => intval($this->request->getGet('draw')),
+            'recordsTotal' => $total_count->total,
+            'recordsFiltered' => $total_count->total,
+            'data' => $data
+        ];
+
+        echo json_encode($json_data);
+
+    }
+
+    public function subirFacturas(){
+
+        $columnas = ['nombre'];
+        $provedores = $this->AdminModel->getAllColums($columnas,'provedores',[]);
+
+        $columnas = ['nombre'];
+        $metodos = $this->AdminModel->getAllColums($columnas,'metodos_pago',[]);
+
+
+        $data = [
+            'provedores' => $provedores,
+            'metodos' => $metodos
+        ];
+
+        return view('admin/headers/index')
+            . view('admin/facturas/subir',$data)
+            . view('admin/footers/index');
+    }
+
+    public function insertFacturas(){
+        if (session('user_type') == 0 ) {
+            session_destroy();
+            return redirect()->to(base_url());
+        }
+
+        if($_POST['moneda'] == 'MXN'){
+            $format = new NumberFormatter('es_MX',NumberFormatter::CURRENCY);
+        }else{
+            $format = new NumberFormatter('en_US',NumberFormatter::CURRENCY);
+        }
+
+        $monto = $format->formatCurrency($_POST['monto'],$_POST['moneda']);
+
+        $condiciones = ['nombre' => $_POST['provedor']];
+
+        if( $this->AdminModel->exist('provedores',$condiciones) ){
+            #El provedor existe, tomamos el id
+            $columnas = ['id'];
+            $provedor = $this->AdminModel->getColumnsOneRow($columnas,'provedores',$condiciones);
+            $id_provedor = $provedor['id'];
+        }else{
+            #El provedor no existe, lo añadimos y tomamos su id
+            $dataInsert = [
+                'nombre' => $_POST['provedor'],
+                'inserted_by' => session('usuario')
+            ];
+
+            $id_provedor = $this->AdminModel->generalInsertLastId($dataInsert,'provedores');
+            $new_provedor = true;
+        }
+
+        $condiciones = ['nombre' => $_POST['metodo_pago']];
+
+        if( $this->AdminModel->exist('metodos_pago',$condiciones) ){
+            #El provedor existe, tomamos el id
+            $columnas = ['id'];
+            $metodo_pago = $this->AdminModel->getColumnsOneRow($columnas,'metodos_pago',$condiciones);
+            $id_metodo = $metodo_pago['id'];
+        }else{
+            #El provedor no existe, lo añadimos y tomamos su id
+            $dataInsert = [
+                'nombre' => $_POST['metodo_pago'],
+                'inserted_by' => session('usuario')
+            ];
+
+            $id_metodo = $this->AdminModel->generalInsertLastId($dataInsert,'metodos_pago');
+            $new_metodo = true;
+        }
+
+
+        $file_tmp = $_FILES['facturaPDF']['tmp_name'];
+
+        $fp = fopen($file_tmp, 'r+b');
+        $binario_pdf = fread($fp, filesize($file_tmp));
+        fclose($fp);
+
+        if( $_FILES['facturaXML']['size'] > 0){
+            $file_tmp = $_FILES['facturaXML']['tmp_name'];
+            $fp = fopen($file_tmp, 'r+b');
+            $binario_xml = fread($fp, filesize($file_tmp));
+            fclose($fp);
+        }
+
+
+
+
+
+        $data = [
+            'provedor' => $id_provedor,
+            'detalles' => $_POST['detalles'],
+            'monto' => $monto,
+            'moneda' => $_POST['moneda'],
+            'fecha_pago' => $_POST['fecha_pago'],
+            'fecha_factura' => $_POST['fecha_factura'],
+            'factura_pdf' => $binario_pdf,
+            'factura_xml' => isset($binario_xml) ? $binario_xml : null,
+            'metodo_pago' => $id_metodo,
+            'inserted_by' => session('usuario')
+        ];
+
+        if( !$this->AdminModel->generalInsert('facturas',$data) ){
+            return redirect()->back()
+            ->with('icon', 'error')
+            ->with('title', 'Lo sentimos')
+            ->with('text', 'Ha ocurrido un error, contacte a sistemas. Código de error: 300');
+        }
+
+        $mensaje = 'Factura insertada correctamente. ';
+
+        if(isset($new_provedor)){
+            $mensaje .= 'Agrego un nuevo provedor, complete su información en el módulo de provedores. ';
+        }
+
+        if(isset($new_provedor)){
+            $mensaje .= 'Agrego un nuevo método de pago, complete su información en el módulo de métodos de pago. ';
+        }
+
+        return redirect()->to(base_url('admin/facturas/lista'))
+            ->with('icon', 'success')
+            ->with('title', 'Éxito')
+            ->with('text', $mensaje);
+    }
+
+    public function downloadBlobFiles($tipo, $id) {
+        $condiciones = [
+            'id' => $id
+        ];
+        $columnas = ['factura_' . $tipo, 'fecha_factura'];
+
+        $archivo = $this->AdminModel->getColumnsOneRow($columnas, 'facturas', $condiciones);
+
+        // Verifica si se encontró el archivo
+        if (!$archivo) {
+            return response()->json(['error' => 'Archivo no encontrado'], 404);
+        }
+
+        if($archivo['factura_' . $tipo] === null){
+            return redirect()->back()
+            ->with('icon', 'info')
+            ->with('title', 'Lo sentimos')
+            ->with('text', 'Esta factura no tiene un XML asociado.');
+        }
+
+        $blobData = $archivo['factura_' . $tipo];
+        $nombreArchivo = 'Factura_' . $id . '_' . $archivo['fecha_factura'];
+
+        // Configura las cabeceras adicionales según el tipo de archivo
+        if ($tipo == 'pdf') {
+            $this->response->setHeader('Content-Type', 'application/pdf');
+            $this->response->setHeader('Content-Disposition', 'attachment; filename=' . $nombreArchivo . '.pdf');
+        } elseif ($tipo == 'xml') {
+            $this->response->setHeader('Content-Type', 'text/xml');
+            $this->response->setHeader('Content-Disposition', 'attachment; filename=' . $nombreArchivo . '.xml');
+        } else {
+            return response()->json(['error' => 'Tipo de archivo no admitido'], 400);
+        }
+
+        // Envía los datos binarios del BLOB
+        echo $blobData;
+    }
+
+    public function viewBlobFiles($tipo, $id) {
+        $condiciones = [
+            'id' => $id
+        ];
+        $columnas = ['factura_' . $tipo, 'fecha_factura'];
+
+        $archivo = $this->AdminModel->getColumnsOneRow($columnas, 'facturas', $condiciones);
+
+        // Verifica si se encontró el archivo
+        if (!$archivo) {
+            return response()->json(['error' => 'Archivo no encontrado'], 404);
+        }
+
+        if($archivo['factura_' . $tipo] === null){
+            return redirect()->back()
+            ->with('icon', 'info')
+            ->with('title', 'Lo sentimos')
+            ->with('text', 'Esta factura no tiene un XML asociado.');
+        }
+
+        $blobData = $archivo['factura_' . $tipo];
+        $nombreArchivo = 'Factura_' . $id . '_' . $archivo['fecha_factura'];
+
+        // Configura las cabeceras adicionales según el tipo de archivo
+        if ($tipo == 'pdf') {
+            $this->response->setHeader('Content-Type', 'application/pdf');
+            $this->response->setHeader('Content-Disposition', 'inline; filename=' . $nombreArchivo . '.pdf');
+        } elseif ($tipo == 'xml') {
+            $this->response->setHeader('Content-Type', 'text/xml');
+            $this->response->setHeader('Content-Disposition', 'inline; filename=' . $nombreArchivo . '.xml');
+        } else {
+            return response()->json(['error' => 'Tipo de archivo no admitido'], 400);
+        }
+
+        // Envía los datos binarios del BLOB
+        echo $blobData;
+    }
+
+    public function provedores(){
+
+        if (session('user_type') == 0) {
+            session_destroy();
+            return redirect()->to(base_url());
+        }
+
+        return view('admin/headers/index')
+            . view('admin/provedores/lista')
+            . view('admin/footers/index');
+    }
+
+    public function getListadoUProvedores(){
+
+        $columnas = [
+            'id', 'nombre', 'direccion', 'inserted_by'
+        ];
+
+        $tabla = 'provedores';
+
+        $dataSend = [
+            'valor_buscado' => $this->request->getGet('search')['value'], #VALOR A BUSCAR
+            'columnas' => $columnas,
+            'tabla' => $tabla,
+            'dir' => $this->request->getGet('order')[0]['dir'],
+            'start' => $this->request->getGet('start'),
+            'length' => $this->request->getGet('length'),
+            'order_column' => $this->request->getGet('order')[0]['column'],
+            'inner_join' => [
+                'usuarios' => [
+                    'join' => "usuarios.usuario = {$tabla}.inserted_by",
+                    'columnas' => ['nombre','ap_paterno','ap_materno'],
+                    'type' => 'LEFT JOIN'
+                ],
+            ],
+        ];
+
+        $serverSide = $this->generateServerSideTable($dataSend);
+
+        $array = $serverSide['array'];
+        $total_count = $serverSide['total_count'];
+
+        $data = json_decode(json_encode($array), FALSE);
+
+        $json_data = [
+            'draw' => intval($this->request->getGet('draw')),
+            'recordsTotal' => $total_count->total,
+            'recordsFiltered' => $total_count->total,
+            'data' => $data
+        ];
+
+        echo json_encode($json_data);
+    }
+
+    public function updateProvedores(){
+
+        $update = [
+            'nombre' => $_POST['nombre'],
+            'direccion' => $_POST['direccion'],
+            'updated_by' => session('usuario'),
+            'fecha_update' => $this->getDateTime()
+        ];
+        $condiciones = ['id' => $_POST['id']];
+
+        if( !$this->AdminModel->generalUpdate('provedores',$update,$condiciones) ){
+            http_response_code(700);
+            exit;
+        }
+        return true;
+    }
+
+    public function deleteProvedores(){
+
+
+        $columnas = ['id', 'provedor'];
+        $condiciones = ['provedor' => $_POST['id']];
+
+        $facturas = $this->AdminModel->getAllColums($columnas,'facturas',$condiciones);
+
+        if(!empty($facturas)){
+            foreach($facturas as $f){
+                $condiciones = ['id' => $f['id']];
+                $dataUpdate = ['provedor' => 'Provedor eliminado por '.session('nombre_completo').', actualizar registro.'];
+                $this->AdminModel->generalUpdate('facturas',$dataUpdate,$condiciones);
+            }
+        }
+
+        $condiciones = ['id' => $_POST['id']];
+
+        if( !$this->AdminModel->generalDelete('provedores',$condiciones) ){
+            http_response_code(700);
+            exit;
+        }
+        return true;
+    }
+
+    public function addProvedores(){
+
+        $data = [
+            'nombre' => $_POST['nombre'],
+            'direccion' => $_POST['direccion'],
+            'inserted_by' => session('usuario')
+        ];
+
+        if( !$this->AdminModel->generalInsert('provedores',$data) ){
+            http_response_code(801);
+            echo 'Error al insertar el registro. Contacte a sistemas';
+            exit;
+        }
+
+        return json_encode(true);
+
+
+    }
+
+    public function metodosPago(){
+
+        if (session('user_type') == 0) {
+            session_destroy();
+            return redirect()->to(base_url());
+        }
+
+        return view('admin/headers/index')
+            . view('admin/metodos_pago/lista')
+            . view('admin/footers/index');
+    }
+
+    public function addMetodosPago(){
+
+
+        if(isset($_POST['numero'])){
+            $numero_tarjeta = $_POST['numero'];
+
+            $condiciones = ['numero' => $numero_tarjeta, 'nombre' => $_POST['nombre']];
+    
+            if( $this->AdminModel->exist('metodos_pago',$condiciones) ){
+                http_response_code(800);
+                echo 'La tarjeta ya existe en el sistema';
+                exit;
+            }
+        }else{
+            $numero_tarjeta = 'NA';
+        }
+
+        $data = [
+            'nombre' => $_POST['nombre'],
+            'numero' => $numero_tarjeta,
+            'tipo_tarjeta' => $_POST['tipo_tarjeta'],
+            'inserted_by' => session('usuario')
+        ];
+
+        if( !$this->AdminModel->generalInsert('metodos_pago',$data) ){
+            http_response_code(801);
+            echo 'Error al insertar el registro. Contacte a sistemas';
+            exit;
+        }
+
+        return json_encode(true);
+
+
+    }
+
+    public function getListadoMetodos(){
+
+        $columnas = [
+            'id', 'nombre', 'numero', 'tipo_tarjeta', 'fecha_registro', 'inserted_by'
+        ];
+
+        $tabla = 'metodos_pago';
+
+        $dataSend = [
+            'valor_buscado' => $this->request->getGet('search')['value'], #VALOR A BUSCAR
+            'columnas' => $columnas,
+            'tabla' => $tabla,
+            'dir' => $this->request->getGet('order')[0]['dir'],
+            'start' => $this->request->getGet('start'),
+            'length' => $this->request->getGet('length'),
+            'order_column' => $this->request->getGet('order')[0]['column'],
+            'inner_join' => [
+                'usuarios' => [
+                    'join' => "usuarios.usuario = {$tabla}.inserted_by",
+                    'columnas' => ['nombre','ap_paterno','ap_materno'],
+                    'type' => 'LEFT JOIN'
+                ],
+            ],
+        ];
+
+        $serverSide = $this->generateServerSideTable($dataSend);
+
+        $array = $serverSide['array'];
+        $total_count = $serverSide['total_count'];
+
+        $data = json_decode(json_encode($array), FALSE);
+
+        $json_data = [
+            'draw' => intval($this->request->getGet('draw')),
+            'recordsTotal' => $total_count->total,
+            'recordsFiltered' => $total_count->total,
+            'data' => $data
+        ];
+
+        echo json_encode($json_data);
+    }
+
+    public function updateMetodosPago(){
+
+        $fecha_update = $this->getDateTime();
+
+        $condiciones = [
+            'id' => $_POST['id']
+        ];
+
+        $dataUpdate = [
+            'nombre' => $_POST['nombre'],
+            'numero' => $_POST['numero'],
+            'tipo_tarjeta' => $_POST['tipo_tarjeta'],
+            'fecha_update' => $fecha_update,
+            'updated_by' => session('usuario')
+        ];
+
+        if( !$this->AdminModel->generalUpdate('metodos_pago',$dataUpdate,$condiciones) ){
+            http_response_code(800);
+            echo 'Ocurrio un problema al acualizar el registro. Contacte a sistemas.';
+            exit;
+        }
+
+        return json_encode(true);
+    }
+
+    public function deleteMetodosPago(){
+
+        $columnas = ['id', 'metodo_pago'];
+        $condiciones = ['metodo_pago' => $_POST['id']];
+
+        $metodos = $this->AdminModel->getAllColums($columnas,'facturas',$condiciones);
+
+        if(!empty($metodos)){
+            foreach($metodos as $m){
+                $condiciones = ['id' => $m['id']];
+                $dataUpdate = ['metodo_pago' => 'Método de pago eliminado por '.session('nombre_completo').', actualizar registro.'];
+                $this->AdminModel->generalUpdate('facturas',$dataUpdate,$condiciones);
+            }
+        }
+
+        $condiciones = ['id' => $_POST['id']];
+
+        if( !$this->AdminModel->generalDelete('metodos_pago',$condiciones) ){
+            http_response_code(700);
+            exit;
+        }
+        return true;
+    }
+
+    private function getDateTime(){
+        return date("Y-m-d H:i:s");
+    }
+
+
+    public function eliminarFactura(){
+
+        if (session('user_type') == 0) {
+            session_destroy();
+            return redirect()->to(base_url());
+        }
+        //sacamos el id del post
+        $condiciones = ['id' => $_POST['id']];
+        //sacamos las columnas que queremos
+        $columnas = ['id_factura','id_pago'];
+        $factura = $this->AdminModel->getColumnsOneRow($columnas, 'facturas_admin', $condiciones);
+        $id_factura = $factura['id_factura'];
+        $condiciones = ['id'=> $id_factura];
+        $columnas = ['id_movimientos','fecha_insercion','csf'];
+        $factura_info = $this->AdminModel->getColumnsOneRow($columnas, 'factura', $condiciones);
+        //Traernos la clave del cuerpo el cual sirve para el envio de correos
+        $condiciones = ['id' => $factura['id_pago']];
+        $columnas = ['claveCuerpo'];
+        $claveCuerpo = $this->AdminModel->getColumnsOneRow($columnas,'pagos',$condiciones);
+        $claveCuerpo = $claveCuerpo['claveCuerpo'];
+        
+       
+        /*Eliminacion de los comprobantes de movimientos */
+        if(empty($factura_info)){
+            //No encontro informacion de la factura
+            http_response_code(100);
+            exit;
+        }else {
+            $id_movimientos_string = $factura_info['id_movimientos'];
+            $id_movimientos_array = explode(',', $id_movimientos_string);
+            if (end($id_movimientos_array) == '') {
+                array_pop($id_movimientos_array);
+            }
+        
+            /*Repeticion de una accion mediante el foreach en el cual se actualiza 
+             los movimientos pertenecientes a la factura que se va a eliminar*/
+
+            foreach ($id_movimientos_array as $id_movimiento) {
+                $id_movimiento = intval($id_movimiento);
+                $condiciones = ['id' => $id_movimiento];
+                $data = ['facturado' => 0];
+                    /*Actualización del estado de los movimientos */
+                    if(!$this->AdminModel->generalUpdate('movimientos',$data,$condiciones)){
+                        http_response_code(200);
+                        exit;
+                    }
+
+
+            }
+
+            /*Eliminación de la carta de situación fiscal */
+            $csf = $factura_info['csf'];
+            $path_csf = FCPATH . 'writable/uploads/csf/' . $csf;
+                    
+                if(!empty($csf)){
+                    // Verifica si el archivo existe y si es un archivo válido para $name2
+                    if (file_exists($path_csf) && is_file($path_csf)) {
+                        // Elimina el archivo de comprobante para $name2
+                        unlink($path_csf);
+                    }
+                }
+        }
+
+            /*Eliminación de los datos de la tabla de facturas */
+            $condiciones = ['id'=> $id_factura];
+            if(!$this->AdminModel->generalDelete('facturas',$condiciones)){
+                http_response_code(300);
+                exit;
+            }
+
+
+        //Obtenemos los correos de los miembros del cuerpo academico para enviarles un correo
+        
+        $columnas = ['usuario'];
+        $condiciones = ['cuerpoAcademico' => $claveCuerpo];
+        $miembros = $this->AdminModel->getAllColums($columnas,'miembros',$condiciones);
+       
+        if(empty($miembros)){
+            http_response_code(400);
+            exit;
+        }
+        
+        $correos = ['pmejiaa@redesla.la']; #Variable en donde se almacenaran todos los correos a donde se van a enviar
+        foreach($miembros as $m){
+            $condiciones = ['usuario' => $m['usuario']];
+            $columnas = ['correo'];
+            $usuario = $this->AdminModel->getColumnsOneRow($columnas,'usuarios',$condiciones);
+            
+            if(!empty($usuario)){
+                array_push($correos,$usuario['correo']);
+            }
+        }
+
+        $msj = $_POST['mensaje'];
+
+        $html = '';
+
+        $email = \Config\Services::email();
+        $email->setFrom('atencion@redesla.la', 'Equipo REDESLA'); //Quien lo manda
+        $email->setTo($correos);
+        $email->setSubject('Solicitud de movimiento RECHAZADO para corrección'); //Pendiente
+        $email->setMessage($html);
+
+        if (!$email->send()) {
+            //No se pudieron enviar los correos
+            http_response_code(600);
+            exit;
+        } 
+
+        http_response_code(200);
+        exit;
+                    $fecha_emision_factura =  $factura_info['fecha_insercion'];
+
+                    #Envio de correo de factura rechazada.
+                
+
+                    $html = "
+                    <p>Estimados investigadores del grupo <b>{$claveCuerpo}</b></p>
+                    <p>
+                    El Equipo RedesLA informa que su factura emitida el {$fecha_emision_factura} ha sido cancelada y/o eliminada, rectificar sus datos para la solicitud nuevamente.
+                    </p>
+                    <p>Detalles:</p>
+                    <p>{$msj}</p>
+                    <p>
+                    Sin más que agregar, quedamos atentos para cualquier duda o comentario al respecto.
+                    </p>
+                    <p>
+                    <b>IMPORTANTE</b>, Cualquier cambio, cancelación o modificación de esta factura deberá solicitarse dentro del mes de pago y emisión de la misma en día hábil, en un horario no mayor a las 15:00 horas (Centro de México).
+                    </p>" ;
+        
+        $condiciones = ['id' => $_POST['id']];
+        if(!$this->AdminModel->generalDelete('facturas_admin',$condiciones)){
+            http_response_code(600);
+            exit;
+        }else{
+            return 'success';
+        }
+
     }
 
     #====================USUARIOS=======================
@@ -13569,549 +14486,7 @@ class AdminController extends BaseController
 
     #======================FACTURAS================================
 
-    public function facturas()
-    {
-        if (session('user_type') == 0) {
-            session_destroy();
-            return redirect()->to(base_url());
-        }
-
-        return view('admin/headers/index')
-            . view('admin/facturas/lista')
-            . view('admin/footers/index');
-    }
-
-    public function getListadoFacturas(){
-        $valor_buscado = $this->request->getGet('search')['value']; #VALOR DEL INPUT DE BUSCAR
-
-        $columnas = ['id','claveCuerpo','id_pago','tipo'];
-
-        //sin grado ni usuario
-
-        $sql_count = "SELECT count(id) as total FROM facturas_admin";
-        $sql_data = "SELECT * FROM facturas_admin";
-
-        $condicion = "";
-
-        if(!empty($valor_buscado)){
-            foreach($columnas as $key => $val){
-                if($columnas[$key] == 'id'){
-                    $condicion .= " WHERE ".$val." LIKE '%".$valor_buscado."%'";
-                }else{
-                    $condicion .= " OR ".$val." LIKE '%".$valor_buscado."%'";
-                }
-            }
-        }
-
-        $sql_count = $sql_count . $condicion;
-        $sql_data = $sql_data . $condicion;
-
-        $total_count = $this->db_serv->query($sql_count)->getRow();
-
-        $sql_data .= " ORDER BY ".$columnas[$this->request->getGet('order')[0]['column']]." ".$this->request->getGet('order')[0]['dir']." LIMIT ".$this->request->getGet('start').", ".$this->request->getGet('length')."";
-
-        $data = $this->db_serv->query($sql_data)->getResult(); //es un objeto
-
-        $array = json_decode(json_encode($data), true); //lo convertimos a un array
-
-        foreach($array as $key=>$a){
-            $condiciones = ['id' => $a['id_factura']]; #columna a bsuscar en la tabla, segundo es el valor a encontrar
-            $condiciones2 = ['id'=>$a['id_pago']];
-            $columnas2= ['proyecto'];
-            $columnas3=['facturado'];
-            $columnas = ['id_movimientos']; #especifico las columnas de la tabla de la bd a traer
-            $infoMovimientos = $this->AdminModel->getColumnsOneRow($columnas,'factura',$condiciones);
-            $infoMovimientos2 = $this->AdminModel->getColumnsOneRow($columnas2,'pagos',$condiciones2); 
-            $infoMovimientos3 = $this->AdminModel->getColumnsOneRow($columnas3,'factura',$condiciones); 
-            #consulta
-            #SELECT $COLUMNAS FROM $TABLA WHERE $CONDICIONES LIMIT 1
-            $explode_id_movimientos = explode(',',$infoMovimientos['id_movimientos'],-1);
-            # [0]
-
-            switch ($infoMovimientos3['facturado']){
-                case 0:
-                    $valor = '<i class="mdi mdi-alert text-warning"></i> Se puede facturar';
-                    $htmlEditar = '<a type="button" href="ver/'.$a['id_factura'].'" class="btn btn-info btn-icon-text btn-rounded"> Ver información </a>';
-                    break;
-
-                case 2:
-                    $valor = '<i class="mdi mdi-check-circle text-success"></i> Ya ha sido emitida la factura';
-                    $htmlEditar = 'No disponible';
-                    break;
-
-                default:
-                    $htmlEditar = '<p class="text-danger">Contacte a sistemas</p>';
-                    $valor = '<p class="text-danger">Contacte a sistemas</p>';
-                    break;
-            }
-  
-            $htmlEliminar = '
-            <div class="dropdown">
-              <button class="btn btn-danger dropdown-toggle btn-rounded  btn-icon-text" type="button" id="dropdownMenuSizeButton' . $a['id'] . '" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="mdi mdi-alert btn-icon-prepend"></i> Eliminar </button> </button>
-              <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton' . $a['id'] . '" style="">
-                <h6 class="dropdown-header">Seleccione una opcion</h6>
-                <button class="dropdown-item eliminarFactura" data-id="' . $a['id'] . '">Eliminar Factura</button>
-              </div>
-            </div>
-            ';
-            $str_comprobantes = '';
-            foreach($explode_id_movimientos as $key2=>$e){
-                $condiciones = ['id' =>$e];
-                $columnas = ['comprobante','estado'];
-                $infoComprobante = $this->AdminModel->getColumnsOneRow($columnas,'movimientos',$condiciones);
-                if(!empty($infoComprobante)){
-                    $str_comprobantes .= '<a target="_blank" href="../../visualizadorComprobantes/'.$infoComprobante['comprobante'].'"><i class="mdi mdi-file-pdf text-danger" style="font-size: 1.3rem;"></i></a>';
-                }else{
-                    $str_comprobantes = 'No existe comprobantes, llame a sistemas';
-                    break;
-                }
-
-                if($infoComprobante['estado'] == 0){
-                    $valor = '<i class="mdi mdi-alert text-danger"></i> No se puede facturar, falta completar el pago(s)';
-                }
-                
-            }
-
-            if(empty($infoMovimientos2)){
-                $infoMovimientos2['proyecto'] = '<span class="text-danger">No se encontro información del pago al que pertenece la factura. Probablemente borrado por el administrador.</span>';
-            }
-
-            $array[$key] = [
-                'id' => $a['id'],
-                'claveCuerpo' => $a['claveCuerpo'],
-                'proyecto' => $infoMovimientos2['proyecto'],
-                'tipo' => $a['tipo'],
-                'ticket' => $str_comprobantes,
-                'confirmado'=>$valor,
-                'factura'=>$htmlEditar,
-                'eliminar'=>$htmlEliminar
-            ];
-        }
-
-        $data = json_decode(json_encode($array), FALSE);
-
-        $json_data = [
-            'draw' => intval($this->request->getGet('draw')),
-            'recordsTotal' => $total_count->total,
-            'recordsFiltered' => $total_count->total,
-            'data' => $data
-        ];
-
-        echo json_encode($json_data);
-    }
-
-    public function verFactura($id)
-    {
-
-        if (session('user_type') == 0) {
-            session_destroy();
-            return redirect()->to(base_url());
-        }
-
-        $condiciones = ['id' => $id];
-        $factura = $this->AdminModel->getAllOneRow('factura', $condiciones);
-
-        if (empty($factura)) {
-            return redirect()->back()
-                ->with('icon', 'warning')
-                ->with('title', 'Lo sentimos')
-                ->with('text', '>La factura al que quiere acceder no existe');
-        }
-        $explode_fecha_insercion = explode('-', $factura['fecha_insercion']);
-        $condiciones = ['id' => $factura['pais']];
-        $condiciones2 = ['id' => $factura['estado']];
-        $condiciones3 = ['id' => $factura['municipio']];
-        $condiciones4 = ['claveCuerpo' => $factura['claveCuerpo'], 'ano_carpeta' => $explode_fecha_insercion[0]];
-        $pais = $this->AdminModel->getAllOneRow('pais', $condiciones);
-        $estado = $this->AdminModel->getAllOneRow('estados', $condiciones2);
-        $municipio = $this->AdminModel->getAllOneRow('municipios', $condiciones3);
-        $carpeta_factura = $this->AdminModel->getAllOneRow('carpetas', $condiciones4);
-
-        if (!empty($pais)) {
-            $factura['pais'] = $pais['nombre'];
-        }
-        if (!empty($estado)) {
-            $factura['estado'] = $estado['nombre'];
-        }
-        if (!empty($municipio)) {
-            $factura['municipio'] = $municipio['nombre'];
-        }
-
-        $data['factura'] = $factura;
-
-
-        $condiciones = ['claveCuerpo' => $factura['claveCuerpo']];
-        $columnas = ['redCueCa'];
-        $universidad = $this->AdminModel->getColumnsOneRow($columnas, 'cuerpos_academicos', $condiciones);
-
-        $condiciones = ['id' => $factura['id']];
-        $columnas = ['id_movimientos'];
-        $infoMovimientos = $this->AdminModel->getColumnsOneRow($columnas, 'factura', $condiciones);
-        $explode_id_movimientos = explode(',', $infoMovimientos['id_movimientos'], -1);
-
-        $str_comprobantes = '';
-
-        $btn_facturar = '';
-
-        foreach ($explode_id_movimientos as $key2 => $e) {
-            $condiciones = ['id' => $e];
-            $columnas = ['comprobante', 'estado'];
-            $infoComprobante = $this->AdminModel->getColumnsOneRow($columnas, 'movimientos', $condiciones);
-
-            if ($infoComprobante['estado'] == 0) {
-                $btn_facturar = 'disabled';
-            }
-            if (!empty($infoComprobante)) {
-                $str_comprobantes .= '<a target="_blank" href="../../../visualizadorComprobantes/' . $infoComprobante['comprobante'] . '"><i class="mdi mdi-file-pdf text-danger" style="font-size: 3.5rem;"></i><br>' . $infoComprobante['comprobante'] . '</a>';
-            } else {
-                $str_comprobantes = '';
-                break;
-            }
-        }
-
-        $data['red'] = $universidad['redCueCa'];
-        $data['anio'] = $explode_fecha_insercion[0];
-        $data['comprobantes'] = $str_comprobantes;
-        $data['btn_facturar'] = $btn_facturar;
-
-        if (!empty($carpeta_factura)) {
-            $data['carpetas']['envios'] = $carpeta_factura['envios'];
-        } else {
-            $data['carpetas']['envios'] = 'No encontrado.';
-        }
-
-
-        /*
-        echo '<pre>';
-        print_r($str_comprobantes);
-        echo '</pre>';
-        return;
-        */
-
-        #$factura['estado']
-        return view('admin/headers/index')
-            . view('admin/facturas/ver', $data)
-            . view('admin/footers/index');
-    }
-
-    public function rechazarFactura()
-    {
-
-        $id_factura = $_POST['id_factura'];
-
-        $columnas = ['id_movimientos', 'claveCuerpo', 'fecha_insercion'];
-        $condiciones = ['id' => $id_factura];
-
-        $factura_info = $this->AdminModel->getColumnsOneRow($columnas, 'factura', $condiciones);
-
-        if (empty($factura_info)) {
-            http_response_code(404);
-            echo 'No se ha encontrado información de la factura.';
-            exit;
-        }
-
-        $claveCuerpo = $factura_info['claveCuerpo'];
-        $fecha_emision_factura = $factura_info['fecha_insercion'];
-
-        #VAMOS A RECORRER LOS MOVIMIENTOS Y QUITARLES EL ESTADO DE FACTURADO
-
-        $explode_mov = explode(',', $factura_info['id_movimientos']);
-
-        foreach ($explode_mov as $mov) {
-            $dataUpdate = [
-                'facturado' => 0
-            ];
-            $condicionesUpdate = [
-                'id' => $mov
-            ];
-
-            $this->AdminModel->generalUpdate('movimientos', $dataUpdate, $condicionesUpdate);
-        }
-
-        #eliminamos de facturas_admin
-
-        $condiciones = [
-            'id_factura' => $id_factura
-        ];
-
-        if (!$this->AdminModel->generalDelete('facturas_admin', $condiciones)) {
-            http_response_code(501);
-            echo 'Ha ocurrido un error al eliminar las facturas de admin. Contacte a sistemas.';
-            exit;
-        }
-
-        $condiciones = [
-            'id' => $id_factura
-        ];
-
-        if (!$this->AdminModel->generalDelete('factura', $condiciones)) {
-            http_response_code(502);
-            echo 'Ha ocurrido un error al eliminar las facturas. Contacte a sistemas.';
-            exit;
-        }
-
-        #YA SE HAN ELIMINADO, AHORA VAMOS A ENVIAR EL CORREO
-        #Extraemos los correos
-
-        $columnas = ['usuario'];
-        $condiciones = ['cuerpoAcademico' => $claveCuerpo];
-
-        $miembros = $this->AdminModel->getAllColums($columnas, 'miembros', $condiciones);
-
-        if (empty($miembros)) {
-            http_response_code(404);
-            echo 'No se ha encontrado miembros de este cuerpo académico. Se ha eliminado la factura.';
-            exit;
-        }
-
-        $correos = ['pmejiaa@redesla.la'];
-        $str_correos = '';
-
-        foreach ($miembros as $m) {
-            $condiciones = ['usuario' => $m['usuario']];
-            $columnas = ['correo'];
-            $usuario = $this->AdminModel->getColumnsOneRow($columnas, 'usuarios', $condiciones);
-
-            if (!empty($usuario)) {
-                array_push($correos, $usuario['correo']);
-                $str_correos .= $usuario['correo'] . ', ';
-            }
-        }
-
-        $msj = $_POST['mensaje'];
-
-        $html = "
-        <p>Estimados investigadores del grupo <b>{$claveCuerpo}</b></p>
-        <p>
-        El Equipo RedesLA informa que su solicitud de factura registrada el {$fecha_emision_factura} ha sido rechazada y los datos deben ser modificados.
-        </p>
-        <p>Detalles:</p>
-        <p>{$msj}</p>
-        <p>
-        Sin mas que agregar, esperamos las correcciones de sus datos para facturación.
-        </p>
-        <p>
-        <b>IMPORTANTE</b>, sólo se puede solicitar la factura dentro del mes de pago y en día hábil, en un horario no mayor a las 15:00 horas (Centro de México).
-        </p>
-        ";
-
-
-        $email = \Config\Services::email();
-        $email->setFrom('atencion@redesla.la', 'Equipo REDESLA');
-        $email->setTo($correos);
-        $email->setSubject('Solicitud de factura RECHAZADA para corrección');
-        $email->setMessage($html);
-
-        if (!$email->send()) {
-            http_response_code(600);
-            echo 'No se ha podido enviar los correos. Los correos en cuestion son: ' . $str_correos . '. La factura ha sido rechazada.';
-            exit;
-        }
-
-        $response = [
-            'title' => 'Éxito',
-            'text' => 'Factura eliminada y correos enviados.'
-        ];
-        echo json_encode($response);
-    }
-
-    public function aceptarFactura()
-    {
-
-        $condiciones = [
-            'id' => $_POST['id']
-        ];
-
-        $columnas = ['id_movimientos'];
-
-        $factura = $this->AdminModel->getColumnsOneRow($columnas, 'factura', $condiciones);
-
-        if (empty($factura)) {
-            http_response_code(501);
-            exit;
-        }
-
-        $explode_mov = explode(',', $factura['id_movimientos']);
-
-        foreach ($explode_mov as $m) {
-            if ($m != '') {
-                $condiciones = [
-                    'id' => $m
-                ];
-
-                $dataUpdate = [
-                    'facturado' => 2
-                ];
-
-                if (!$this->AdminModel->generalUpdate('movimientos', $dataUpdate, $condiciones)) {
-                    http_response_code(502);
-                    exit;
-                }
-            }
-        }
-
-        $dataUpdate = [
-            'facturado' => 2
-        ];
-
-        $condiciones = [
-            'id' => $_POST['id']
-        ];
-
-        if (!$this->AdminModel->generalUpdate('factura', $dataUpdate, $condiciones)) {
-            http_response_code(503);
-            exit;
-        }
-
-        return redirect()->to(base_url('admin/finanzas/facturas/lista'))
-            ->with('icon', 'success')
-            ->with('title', '¡ÉXITO!')
-            ->with('text', 'Información actualizada correctamente');
-    }
-
-    public function facturaApi()
-    {
-    }
-
-    public function eliminarFactura(){
-
-        if (session('user_type') == 0) {
-            session_destroy();
-            return redirect()->to(base_url());
-        }
-        //sacamos el id del post
-        $condiciones = ['id' => $_POST['id']];
-        //sacamos las columnas que queremos
-        $columnas = ['id_factura','id_pago'];
-        $factura = $this->AdminModel->getColumnsOneRow($columnas, 'facturas_admin', $condiciones);
-        $id_factura = $factura['id_factura'];
-        $condiciones = ['id'=> $id_factura];
-        $columnas = ['id_movimientos','fecha_insercion','csf'];
-        $factura_info = $this->AdminModel->getColumnsOneRow($columnas, 'factura', $condiciones);
-        //Traernos la clave del cuerpo el cual sirve para el envio de correos
-        $condiciones = ['id' => $factura['id_pago']];
-        $columnas = ['claveCuerpo'];
-        $claveCuerpo = $this->AdminModel->getColumnsOneRow($columnas,'pagos',$condiciones);
-        $claveCuerpo = $claveCuerpo['claveCuerpo'];
-        
-       
-        /*Eliminacion de los comprobantes de movimientos */
-        if(empty($factura_info)){
-            //No encontro informacion de la factura
-            http_response_code(100);
-            exit;
-        }else {
-            $id_movimientos_string = $factura_info['id_movimientos'];
-            $id_movimientos_array = explode(',', $id_movimientos_string);
-            if (end($id_movimientos_array) == '') {
-                array_pop($id_movimientos_array);
-            }
-        
-            /*Repeticion de una accion mediante el foreach en el cual se actualiza 
-             los movimientos pertenecientes a la factura que se va a eliminar*/
-
-            foreach ($id_movimientos_array as $id_movimiento) {
-                $id_movimiento = intval($id_movimiento);
-                $condiciones = ['id' => $id_movimiento];
-                $data = ['facturado' => 0];
-                    /*Actualización del estado de los movimientos */
-                    if(!$this->AdminModel->generalUpdate('movimientos',$data,$condiciones)){
-                        http_response_code(200);
-                        exit;
-                    }
-
-
-            }
-
-            /*Eliminación de la carta de situación fiscal */
-            $csf = $factura_info['csf'];
-            $path_csf = FCPATH . 'writable/uploads/csf/' . $csf;
-                    
-                if(!empty($csf)){
-                    // Verifica si el archivo existe y si es un archivo válido para $name2
-                    if (file_exists($path_csf) && is_file($path_csf)) {
-                        // Elimina el archivo de comprobante para $name2
-                        unlink($path_csf);
-                    }
-                }
-        }
-
-            /*Eliminación de los datos de la tabla de facturas */
-            $condiciones = ['id'=> $id_factura];
-            if(!$this->AdminModel->generalDelete('facturas',$condiciones)){
-                http_response_code(300);
-                exit;
-            }
-
-
-        //Obtenemos los correos de los miembros del cuerpo academico para enviarles un correo
-        
-        $columnas = ['usuario'];
-        $condiciones = ['cuerpoAcademico' => $claveCuerpo];
-        $miembros = $this->AdminModel->getAllColums($columnas,'miembros',$condiciones);
-       
-        if(empty($miembros)){
-            http_response_code(400);
-            exit;
-        }
-        
-        $correos = ['pmejiaa@redesla.la']; #Variable en donde se almacenaran todos los correos a donde se van a enviar
-        foreach($miembros as $m){
-            $condiciones = ['usuario' => $m['usuario']];
-            $columnas = ['correo'];
-            $usuario = $this->AdminModel->getColumnsOneRow($columnas,'usuarios',$condiciones);
-            
-            if(!empty($usuario)){
-                array_push($correos,$usuario['correo']);
-            }
-        }
-
-        $msj = $_POST['mensaje'];
-
-        $html = '';
-
-        $email = \Config\Services::email();
-        $email->setFrom('atencion@redesla.la', 'Equipo REDESLA'); //Quien lo manda
-        $email->setTo($correos);
-        $email->setSubject('Solicitud de movimiento RECHAZADO para corrección'); //Pendiente
-        $email->setMessage($html);
-
-        if (!$email->send()) {
-            //No se pudieron enviar los correos
-            http_response_code(600);
-            exit;
-        } 
-
-        http_response_code(200);
-        exit;
-                    $fecha_emision_factura =  $factura_info['fecha_insercion'];
-
-                    #Envio de correo de factura rechazada.
-                
-
-                    $html = "
-                    <p>Estimados investigadores del grupo <b>{$claveCuerpo}</b></p>
-                    <p>
-                    El Equipo RedesLA informa que su factura emitida el {$fecha_emision_factura} ha sido cancelada y/o eliminada, rectificar sus datos para la solicitud nuevamente.
-                    </p>
-                    <p>Detalles:</p>
-                    <p>{$msj}</p>
-                    <p>
-                    Sin más que agregar, quedamos atentos para cualquier duda o comentario al respecto.
-                    </p>
-                    <p>
-                    <b>IMPORTANTE</b>, Cualquier cambio, cancelación o modificación de esta factura deberá solicitarse dentro del mes de pago y emisión de la misma en día hábil, en un horario no mayor a las 15:00 horas (Centro de México).
-                    </p>" ;
-        
-        $condiciones = ['id' => $_POST['id']];
-        if(!$this->AdminModel->generalDelete('facturas_admin',$condiciones)){
-            http_response_code(600);
-            exit;
-        }else{
-            return 'success';
-        }
-
-    }
+    
 
     #======================FACTURAS================================
 

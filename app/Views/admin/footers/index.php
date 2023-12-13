@@ -13,6 +13,37 @@
 <!-- page-body-wrapper ends -->
 </div>
 <!-- container-scroller -->
+
+
+<!-- MODALS -->
+
+<div class="modal fade" id="modalProfilePic" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Cambiar foto de perfil</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="modalBodyProfilePic">
+        <div class="row" style="display: flex; align-items: center; justify-content: center;">
+          <img id="profile_pic_preview" src="<?= file_exists(base_url('/resources/img/profiles/').session('profile_pic')) ? base_url('/resources/img/profiles/').session('profile_pic') : base_url('/resources/img/profiles/avatar.png') ?>" alt="" width="60%" height="60%" style="border-radius: 50%;">
+        </div>
+        <div class="row" style="display: flex; align-items: center; justify-content: center;">
+          <button type="button" class="btn btn-md btn-info">Seleccionar foto de perfil</button>
+          <input type="file" name="profile_pic" id="" hidden>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <!-- plugins:js -->
 <script src="<?= base_url('/resources/admin/') ?>/assets/vendors/js/vendor.bundle.base.js"></script>
 <!-- endinject -->

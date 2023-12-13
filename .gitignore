@@ -126,7 +126,8 @@ nb-configuration.xml
 /.phpunit.*.cache
 
 # ARCHIVOS QUE NO SE DEBEN MODIFICAR EN PRODUCCION
-app/Config/App.php
-app/Config/Email.php
-app/Config/Database.php
+
+#app/Config/App.php
+#app/Config/Email.php
+#app/Config/Database.php
 

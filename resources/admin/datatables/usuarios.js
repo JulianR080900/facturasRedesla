@@ -6,8 +6,8 @@
       scrollC: '2000px',
       lengthMenu: [5,10,20,100,200,500,1000,5000],
       columnDefs: [
-        { className: 'centered', targets: [0,1,2,3,4,5] },
-        { orderable: false, targets: [4,5]},
+        { className: 'centered', targets: [0,1,2,3,4] },
+        { orderable: false, targets: [3,4]},
         //{ width: '50%', targets: [0]},
         //{ sercheable: false, targets: [2]} //Quita el buscar en esas columnas
 
@@ -63,7 +63,6 @@
           }
         },
         {data: 'correo'},
-        {data: 'correo_institucional'},
         {
           data: null,
           render: function(row){

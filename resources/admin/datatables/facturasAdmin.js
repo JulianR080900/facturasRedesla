@@ -43,13 +43,52 @@ const dataTableOptions = {
   },
   columns: [
     {data: 'id'},
-    {data: 'claveCuerpo'},
-    {data: 'proyecto'},
-    {data: 'tipo'},
-    {data: 'ticket'},
-    {data: 'confirmado'},
-    {data: 'factura'},
-    {data: 'eliminar'}
+    {
+      data: null,
+      render: function(row){
+        return `${row.monto} ${row.moneda} <i class="flag-icon flag-icon-${row.moneda == 'MXN' ? 'mx' : 'us'}"></i>`
+      }
+    },
+    {
+      data: null,
+      render: function(row){
+        if(row.provedores_nombre == null){
+          return `<span class='text-warning'>${row.provedor}</span>`
+        }else{
+          return row.provedores_nombre
+        }
+      }
+    },
+    {
+      data: null,
+      render: function(row){
+        console.log(row);
+        if(row.metodos_pago_nombre == null){
+          return `<span class='text-warning' >${row.metodo_pago}</span>`
+        }else{
+          return row.metodos_pago_nombre
+        }
+      }
+    },
+    {
+      data: null,
+      render: function(row){
+        console.log(row);
+        return `${row.monto} ${row.moneda} <i class="flag-icon flag-icon-${row.moneda == 'MXN' ? 'mx' : 'us'}"></i>`
+      }
+    },
+    {
+        data: null,
+        render: function(row){
+          return `
+          <a href='./downloadBlobFiles/pdf/${row.id}' title='Descargar'> <i class="fa-solid fa-file-pdf" style='font-size: 2rem; color: #b51308'></i> </a>
+          <a target='_blank' href='./viewBlobFiles/pdf/${row.id}' title='Ver'> <i class="fa-solid fa-eye" style='font-size: 2rem; color: #fff'></i> </a>
+          `
+        }
+      },
+    {data: 'fecha_pago'},
+    {data: 'fecha_factura'},
+    {data: 'fecha_insert'}
   ],
   dom: 'lBfrtip', //lBfrtip
   buttons: [
