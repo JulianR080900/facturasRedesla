@@ -131,7 +131,7 @@
           <span class="nav-link">Menú</span>
         </li>
         <?php
-        if (session('nombre') == 'Oscar') {
+        if (session('nombre') == 'Oscar Cuauhtémoc') {
         ?>
           <li class="nav-item menu-items">
             <a class="nav-link" href="<?= base_url('/admin/dashboard') ?>">
